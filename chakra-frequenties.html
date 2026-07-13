@@ -158,6 +158,21 @@
     line-height:1.5;
     margin-top:6px;
   }
+  .delete-link{
+    display:inline-block;
+    margin-top:6px;
+    font-family:var(--mono);
+    font-size:10.5px;
+    letter-spacing:0.04em;
+    color:var(--text-dim);
+    text-decoration:underline;
+    text-underline-offset:2px;
+    cursor:pointer;
+    background:none;
+    border:none;
+    padding:0;
+  }
+  .delete-link:hover{ color:#e0736a; }
   .row:nth-child(even) .desc{ margin-left:auto; }
   .row:nth-child(odd) .desc{ margin-right:auto; }
 
@@ -230,7 +245,8 @@
     font-size:12px;
     color:var(--text-dim);
   }
-  .custom-freq input[type=number]{
+  .custom-freq input[type=number],
+  .custom-freq input[type=text]{
     width:78px;
     background:var(--bg-2);
     color:var(--text);
@@ -623,6 +639,8 @@
   </div>
 </div>
 
+<audio id="castAudio" autoplay playsinline style="display:none;"></audio>
+
 <div class="tour-banner hidden" id="tourBanner">
   <div class="tour-text" id="tourText"></div>
   <div class="tour-actions">
@@ -653,6 +671,12 @@
     <div id="extraRows"></div>
   </div>
 
+  <div class="extra-divider"><span id="txtDividerMine">Mijn frequenties</span></div>
+  <div class="column">
+    <div id="customRows"></div>
+  </div>
+  <p class="mood-note" id="customEmptyNote">Nog geen eigen frequenties opgeslagen.</p>
+
   <div class="extra-divider"><span id="txtDividerQuick">Kies snel</span></div>
   <div class="presets-bar" id="quickButtons"></div>
   <p class="mood-note" id="quickNote">Kies wat je nu nodig hebt — de bijpassende chakra's starten automatisch.</p>
@@ -661,7 +685,9 @@
   <div class="presets-bar">
     <button class="pill" id="journeyBtn">Start journey (14 min, wortel &rarr; kruin)</button>
     <button class="pill" id="shareBtn">Deel deze combinatie</button>
+    <button class="pill" id="castBtn">Verbind met tv/speaker</button>
   </div>
+  <p class="mood-note" id="castNote" style="display:none;"></p>
 
   <div class="extra-divider"><span id="txtDividerBreath">Ademhaling</span></div>
   <div class="breathing-wrap">
@@ -723,11 +749,24 @@
     </div>
 
     <div class="controls-row">
+      <div class="custom-freq">
+        <span id="txtCustomName">Naam</span>
+        <input type="text" id="customFreqName" placeholder="bijv. Mijn slaaptoon" maxlength="30">
+      </div>
+      <button class="pill" id="customFreqSaveBtn">Opslaan & toevoegen</button>
+    </div>
+
+    <div class="controls-row">
       <button class="pill" id="binauralToggle">Binaurale beats: uit</button>
+      <button class="pill" id="isochronicToggle">Isochronische tonen: uit</button>
       <div class="session-panel" id="beatPanel">
-        <input type="range" id="beat" min="1" max="12" step="0.5" value="6">
+        <input type="range" id="beat" min="1" max="40" step="0.01" value="6">
         <span class="beat-label" id="beatLabel">6 Hz &middot; Theta</span>
       </div>
+    </div>
+    <div class="controls-row">
+      <button class="pill" id="schumannBtn">Schumann (7,83 Hz)</button>
+      <button class="pill" id="gammaBtn">Gamma (40 Hz, focus)</button>
     </div>
 
     <div class="controls-row">
@@ -773,12 +812,13 @@ const EXTRAS = [
   { id:'p174', sa:'', freq:174, color:'#e8d9a8' },
   { id:'p285', sa:'', freq:285, color:'#e8d9a8' },
   { id:'healing', sa:'', freq:432, color:'#e8d9a8' },
+  { id:'p111', sa:'', freq:111, color:'#e8d9a8' },
 ];
 
 const I18N = {
   nl: {
-    names: { sahasrara:'Kruinchakra', ajna:'Derde-oogchakra', vishuddha:'Keelchakra', anahata:'Hartchakra', manipura:'Zonnevlechtchakra', svadhisthana:'Sacraalchakra', muladhara:'Wortelchakra', p174:'Pijnverlichting', p285:'Weefselherstel', healing:'Healing Frequency' },
-    subtitles: { p174:'Solfeggio', p285:'Solfeggio', healing:'Universele stemming' },
+    names: { sahasrara:'Kruinchakra', ajna:'Derde-oogchakra', vishuddha:'Keelchakra', anahata:'Hartchakra', manipura:'Zonnevlechtchakra', svadhisthana:'Sacraalchakra', muladhara:'Wortelchakra', p174:'Pijnverlichting', p285:'Weefselherstel', healing:'Healing Frequency', p111:'Celvernieuwing' },
+    subtitles: { p174:'Solfeggio', p285:'Solfeggio', healing:'Universele stemming', p111:'Extra frequentie' },
     descs: {
       sahasrara:'Spiritueel bewustzijn en verbinding met iets groters dan jezelf.',
       ajna:'Intuïtie en helder inzicht voorbij het letterlijke.',
@@ -790,6 +830,7 @@ const I18N = {
       p174:'Verlichting van pijn, spanning en een gevoel van veiligheid.',
       p285:'Herstel van weefsel en energie, bijvoorbeeld na inspanning.',
       healing:'Alternatieve stemming voor innerlijke rust en harmonie.',
+      p111:'Veelgenoemd bij celherstel en een diep meditatieve, aardse klank.',
     },
     quick: {
       stress:{label:'Stress verminderen', note:'Zonnevlechtchakra en 174 Hz kalmeren het zenuwstelsel en verlichten spanning.'},
@@ -804,28 +845,34 @@ const I18N = {
       all:{label:'Alle chakra\u2019s', note:'Alle zeven chakra\u2019s tegelijk, voor een volledige klankbadervaring.'},
     },
     feelings: { rustig:'\u{1F60C} Rustig', blij:'\u{1F60A} Blij', energiek:'\u26A1 Energiek', moe:'\u{1F634} Moe', verdrietig:'\u{1F622} Verdrietig', gestrest:'\u{1F61F} Gestrest' },
-    ambient: { rain:'Regen', ocean:'Oceaan', bowl:'Klankschaal' },
+    ambient: { rain:'Regen', ocean:'Oceaan', bowl:'Klankschaal', gong:'Gong (432 + 528 Hz)' },
     ui: {
       eyebrow:'Sushumna \u00B7 7 centra', title:'Chakra Frequenties',
       sub:'Selecteer een of meerdere chakra\u2019s om de bijbehorende toon te horen. Combineer centra voor een samengestelde klank, of luister er \u00E9\u00E9n voor \u00E9\u00E9n.',
       startHint:'Tik om geluid te activeren',
-      dividerExtra:'Extra healing frequenties', dividerQuick:'Kies snel', dividerJourney:'Journey & delen',
+      dividerExtra:'Extra healing frequenties', dividerMine:'Mijn frequenties', dividerQuick:'Kies snel', dividerJourney:'Journey & delen',
       dividerBreath:'Ademhaling', dividerAmbient:'Achtergrondgeluid', dividerJournal:'Dagboek', dividerSettings:'Instellingen',
       quickNoteDefault:'Kies wat je nu nodig hebt \u2014 de bijpassende chakra\u2019s starten automatisch.',
       journeyStart:'Start journey (14 min, wortel \u2192 kruin)', journeyStop:'Stop journey',
       journeyMsg:(name,desc)=>`Journey: ${name} \u2014 ${desc}`, journeyDone:'Journey afgerond.',
       shareLabel:'Deel deze combinatie', shareCopied:'Link gekopieerd!', shareFailed:'Kopi\u00EBren mislukt',
+      castLabel:'Verbind met tv/speaker', castConnected:'Verbonden \u2014 tik om te stoppen', castUnsupported:'Casten wordt niet ondersteund op dit toestel of in deze browser.',
       breathToggleOff:'Ademhalingsgeleider: uit', breathToggleOn:'Ademhalingsgeleider: aan',
       breathIn:'Adem in \u2014 4s', breathHold:'Vasthouden \u2014 7s', breathOut:'Adem uit \u2014 8s',
       volume:'Volume', waveform:'Golfvorm', stopAll:'Alles stoppen',
       customFreqLabel:'Eigen frequentie', customFreqPlay:'Afspelen', customFreqStop:'Stoppen',
+      customNameLabel:'Naam', customNamePlaceholder:'bijv. Mijn slaaptoon', customSaveBtn:'Opslaan & toevoegen',
+      customEmptyNote:'Nog geen eigen frequenties opgeslagen.', deleteLink:'Verwijderen',
+      customSavedDefault:'Eigen frequentie',
+      schumannPreset:'Schumann (7,83 Hz)', gammaPreset:'Gamma (40 Hz, focus)',
       binauralOff:'Binaurale beats: uit', binauralOn:'Binaurale beats: aan',
-      bandDelta:'Delta \u00B7 diepe slaap', bandTheta:'Theta \u00B7 ontspanning', bandAlpha:'Alpha \u00B7 alerte rust', bandBeta:'Beta \u00B7 focus',
+      isochronicOff:'Isochronische tonen: uit', isochronicOn:'Isochronische tonen: aan',
+      bandDelta:'Delta \u00B7 diepe slaap', bandTheta:'Theta \u00B7 ontspanning', bandAlpha:'Alpha \u00B7 alerte rust', bandBeta:'Beta \u00B7 focus', bandGamma:'Gamma \u00B7 concentratie',
       sessionLength:'Sessieduur', timerStart:'Start timer', timerCancel:'Annuleer timer',
       themeLight:'Licht thema', themeDark:'Donker thema', printBtn:'Print / opslaan als PDF',
       journalNamePlaceholder:'Naam (optioneel)', journalNotePlaceholder:'Hoe voel je je, voor of na de sessie? (optioneel)',
       journalSave:'Opslaan in dagboek', journalEmpty:'Nog geen aantekeningen.',
-      footer:'396 \u00B7 417 \u00B7 528 \u00B7 639 \u00B7 741 \u00B7 852 \u00B7 963 Hz \u2014 solfeggio-frequenties, traditioneel toegewezen aan de zeven chakra\u2019s.<br>174 \u00B7 285 \u00B7 432 Hz zijn extra, veelgenoemde \u2018healing frequencies\u2019 die los staan van het chakrasysteem.<br>De betekenissen op deze pagina komen uit spirituele en alternatieve tradities en zijn niet wetenschappelijk onderbouwd.<br>Binaurale beats spelen twee net iets verschillende tonen per oor \u2014 gebruik altijd een koptelefoon. Zet het volume laag bij langdurig luisteren.',
+      footer:'396 \u00B7 417 \u00B7 528 \u00B7 639 \u00B7 741 \u00B7 852 \u00B7 963 Hz \u2014 solfeggio-frequenties, traditioneel toegewezen aan de zeven chakra\u2019s.<br>111 \u00B7 174 \u00B7 285 \u00B7 432 Hz zijn extra, veelgenoemde \u2018healing frequencies\u2019 die los staan van het chakrasysteem.<br>De betekenissen op deze pagina komen uit spirituele en alternatieve tradities en zijn niet wetenschappelijk onderbouwd.<br>De 40 Hz gamma-optie is een uitzondering: onderzoek (o.a. MIT) naar 40 Hz geluid en licht bij aandacht en cognitie is wel serieus wetenschappelijk onderzocht, al is het geen bewezen behandeling.<br>Binaurale beats en isochronische tonen spelen op een net iets andere manier twee frequenties tegen elkaar af \u2014 binauraal vereist een koptelefoon, isochronisch werkt ook via een speaker. Zet het volume laag bij langdurig luisteren.',
       tourSteps:[
         'Tik op een van de zeven punten langs de lijn om een chakra af te spelen. Combineer er meerdere voor een samengestelde klank.',
         'Geen zin om te kiezen? Gebruik \u201CKies snel\u201D \u2014 die starten automatisch de juiste combinatie op gevoel of thema.',
@@ -837,7 +884,7 @@ const I18N = {
   },
   en: {
     names: { sahasrara:'Crown Chakra', ajna:'Third-Eye Chakra', vishuddha:'Throat Chakra', anahata:'Heart Chakra', manipura:'Solar Plexus Chakra', svadhisthana:'Sacral Chakra', muladhara:'Root Chakra', p174:'Pain Relief', p285:'Tissue Repair', healing:'Healing Frequency' },
-    subtitles: { p174:'Solfeggio', p285:'Solfeggio', healing:'Universal tuning' },
+    subtitles: { p174:'Solfeggio', p285:'Solfeggio', healing:'Universal tuning', p111:'Extra frequency' },
     descs: {
       sahasrara:'Spiritual awareness and connection to something greater than yourself.',
       ajna:'Intuition and clear insight beyond the literal.',
@@ -849,6 +896,7 @@ const I18N = {
       p174:'Relief from pain, tension and a sense of safety.',
       p285:'Repair of tissue and energy, for example after exertion.',
       healing:'Alternative tuning for inner peace and harmony.',
+      p111:'Commonly cited for cell repair and a deeply meditative, earthy tone.',
     },
     quick: {
       stress:{label:'Reduce stress', note:'Solar plexus and 174 Hz calm the nervous system and ease tension.'},
@@ -863,28 +911,34 @@ const I18N = {
       all:{label:'All chakras', note:'All seven chakras at once, for a full sound-bath experience.'},
     },
     feelings: { rustig:'\u{1F60C} Calm', blij:'\u{1F60A} Happy', energiek:'\u26A1 Energetic', moe:'\u{1F634} Tired', verdrietig:'\u{1F622} Sad', gestrest:'\u{1F61F} Stressed' },
-    ambient: { rain:'Rain', ocean:'Ocean', bowl:'Singing bowl' },
+    ambient: { rain:'Rain', ocean:'Ocean', bowl:'Singing bowl', gong:'Gong (432 + 528 Hz)' },
     ui: {
       eyebrow:'Sushumna \u00B7 7 centers', title:'Chakra Frequencies',
       sub:'Select one or more chakras to hear the matching tone. Combine centers for a layered sound, or listen to them one at a time.',
       startHint:'Tap to enable sound',
-      dividerExtra:'Extra healing frequencies', dividerQuick:'Quick pick', dividerJourney:'Journey & share',
+      dividerExtra:'Extra healing frequencies', dividerMine:'My frequencies', dividerQuick:'Quick pick', dividerJourney:'Journey & share',
       dividerBreath:'Breathing', dividerAmbient:'Background sound', dividerJournal:'Journal', dividerSettings:'Settings',
       quickNoteDefault:'Choose what you need right now \u2014 the matching chakras start automatically.',
       journeyStart:'Start journey (14 min, root \u2192 crown)', journeyStop:'Stop journey',
       journeyMsg:(name,desc)=>`Journey: ${name} \u2014 ${desc}`, journeyDone:'Journey complete.',
       shareLabel:'Share this combination', shareCopied:'Link copied!', shareFailed:'Copy failed',
+      castLabel:'Connect to TV/speaker', castConnected:'Connected \u2014 tap to stop', castUnsupported:'Casting is not supported on this device or browser.',
       breathToggleOff:'Breathing guide: off', breathToggleOn:'Breathing guide: on',
       breathIn:'Breathe in \u2014 4s', breathHold:'Hold \u2014 7s', breathOut:'Breathe out \u2014 8s',
       volume:'Volume', waveform:'Waveform', stopAll:'Stop all',
       customFreqLabel:'Custom frequency', customFreqPlay:'Play', customFreqStop:'Stop',
+      customNameLabel:'Name', customNamePlaceholder:'e.g. My sleep tone', customSaveBtn:'Save & add',
+      customEmptyNote:'No custom frequencies saved yet.', deleteLink:'Delete',
+      customSavedDefault:'Custom frequency',
+      schumannPreset:'Schumann (7.83 Hz)', gammaPreset:'Gamma (40 Hz, focus)',
       binauralOff:'Binaural beats: off', binauralOn:'Binaural beats: on',
-      bandDelta:'Delta \u00B7 deep sleep', bandTheta:'Theta \u00B7 relaxation', bandAlpha:'Alpha \u00B7 alert calm', bandBeta:'Beta \u00B7 focus',
+      isochronicOff:'Isochronic tones: off', isochronicOn:'Isochronic tones: on',
+      bandDelta:'Delta \u00B7 deep sleep', bandTheta:'Theta \u00B7 relaxation', bandAlpha:'Alpha \u00B7 alert calm', bandBeta:'Beta \u00B7 focus', bandGamma:'Gamma \u00B7 concentration',
       sessionLength:'Session length', timerStart:'Start timer', timerCancel:'Cancel timer',
       themeLight:'Light theme', themeDark:'Dark theme', printBtn:'Print / save as PDF',
       journalNamePlaceholder:'Name (optional)', journalNotePlaceholder:'How do you feel, before or after the session? (optional)',
       journalSave:'Save to journal', journalEmpty:'No entries yet.',
-      footer:'396 \u00B7 417 \u00B7 528 \u00B7 639 \u00B7 741 \u00B7 852 \u00B7 963 Hz \u2014 solfeggio frequencies, traditionally assigned to the seven chakras.<br>174 \u00B7 285 \u00B7 432 Hz are extra, commonly cited \u2018healing frequencies\u2019 that are separate from the chakra system.<br>The meanings on this page come from spiritual and alternative traditions and are not scientifically proven.<br>Binaural beats play two slightly different tones per ear \u2014 always use headphones. Keep the volume low during extended listening.',
+      footer:'396 \u00B7 417 \u00B7 528 \u00B7 639 \u00B7 741 \u00B7 852 \u00B7 963 Hz \u2014 solfeggio frequencies, traditionally assigned to the seven chakras.<br>111 \u00B7 174 \u00B7 285 \u00B7 432 Hz are extra, commonly cited \u2018healing frequencies\u2019 that are separate from the chakra system.<br>The meanings on this page come from spiritual and alternative traditions and are not scientifically proven.<br>The 40 Hz gamma option is an exception: research (including MIT) into 40 Hz sound and light for attention and cognition is genuine science, though it is not a proven treatment.<br>Binaural beats and isochronic tones play two frequencies against each other in slightly different ways \u2014 binaural requires headphones, isochronic also works through a speaker. Keep the volume low during extended listening.',
       tourSteps:[
         'Tap one of the seven points along the line to play a chakra. Combine several for a layered sound.',
         'Don\u2019t feel like choosing? Use \u201CQuick pick\u201D \u2014 it automatically starts the right combination for you.',
@@ -908,6 +962,7 @@ const I18N = {
       p174:'Ağrı, gerginlik ve güven hissinde rahatlama.',
       p285:'Örneğin efordan sonra doku ve enerji onarımı.',
       healing:'İç huzur ve uyum için alternatif akort.',
+      p111:'Hücre onarımı ve derin meditatif, topraksı bir tonla ilişkilendirilir.',
     },
     quick: {
       stress:{label:'Stresi azalt', note:'Güneş sinirağı ve 174 Hz sinir sistemini sakinleştirir, gerginliği hafifletir.'},
@@ -922,28 +977,34 @@ const I18N = {
       all:{label:'Tüm çakralar', note:'Tam bir ses banyosu deneyimi için yedi çakra birden.'},
     },
     feelings: { rustig:'\u{1F60C} Sakin', blij:'\u{1F60A} Mutlu', energiek:'\u26A1 Enerjik', moe:'\u{1F634} Yorgun', verdrietig:'\u{1F622} Üzgün', gestrest:'\u{1F61F} Stresli' },
-    ambient: { rain:'Yağmur', ocean:'Okyanus', bowl:'Şifa çanağı' },
+    ambient: { rain:'Yağmur', ocean:'Okyanus', bowl:'Şifa çanağı', gong:'Gong (432 + 528 Hz)' },
     ui: {
       eyebrow:'Sushumna \u00B7 7 merkez', title:'Çakra Frekansları',
       sub:'İlgili tonu duymak için bir veya birden fazla çakra seçin. Katmanlı bir ses için merkezleri birleştirin veya tek tek dinleyin.',
       startHint:'Sesi etkinleştirmek için dokunun',
-      dividerExtra:'Ekstra şifa frekansları', dividerQuick:'Hızlı seçim', dividerJourney:'Yolculuk & paylaşım',
+      dividerExtra:'Ekstra şifa frekansları', dividerMine:'Frekanslarım', dividerQuick:'Hızlı seçim', dividerJourney:'Yolculuk & paylaşım',
       dividerBreath:'Nefes', dividerAmbient:'Arka plan sesi', dividerJournal:'Günlük', dividerSettings:'Ayarlar',
       quickNoteDefault:'Şu an neye ihtiyacın olduğunu seç \u2014 uygun çakralar otomatik başlar.',
       journeyStart:'Yolculuğu başlat (14 dk, kök \u2192 taç)', journeyStop:'Yolculuğu durdur',
       journeyMsg:(name,desc)=>`Yolculuk: ${name} \u2014 ${desc}`, journeyDone:'Yolculuk tamamlandı.',
       shareLabel:'Bu kombinasyonu paylaş', shareCopied:'Bağlantı kopyalandı!', shareFailed:'Kopyalama başarısız',
+      castLabel:'TV/hoparlöre bağlan', castConnected:'Bağlandı \u2014 durdurmak için dokun', castUnsupported:'Bu cihazda veya tarayıcıda yayınlama desteklenmiyor.',
       breathToggleOff:'Nefes rehberi: kapalı', breathToggleOn:'Nefes rehberi: açık',
       breathIn:'Nefes al \u2014 4s', breathHold:'Tut \u2014 7s', breathOut:'Nefes ver \u2014 8s',
       volume:'Ses düzeyi', waveform:'Dalga formu', stopAll:'Tümünü durdur',
       customFreqLabel:'Özel frekans', customFreqPlay:'Çal', customFreqStop:'Durdur',
+      customNameLabel:'İsim', customNamePlaceholder:'\u00F6rn. Uyku tonum', customSaveBtn:'Kaydet & ekle',
+      customEmptyNote:'Henüz özel frekans kaydedilmedi.', deleteLink:'Sil',
+      customSavedDefault:'Özel frekans',
+      schumannPreset:'Schumann (7,83 Hz)', gammaPreset:'Gama (40 Hz, odaklanma)',
       binauralOff:'Binaural sesler: kapalı', binauralOn:'Binaural sesler: açık',
-      bandDelta:'Delta \u00B7 derin uyku', bandTheta:'Theta \u00B7 gevşeme', bandAlpha:'Alfa \u00B7 uyanık sakinlik', bandBeta:'Beta \u00B7 odaklanma',
+      isochronicOff:'İzokronik tonlar: kapalı', isochronicOn:'İzokronik tonlar: açık',
+      bandDelta:'Delta \u00B7 derin uyku', bandTheta:'Theta \u00B7 gevşeme', bandAlpha:'Alfa \u00B7 uyanık sakinlik', bandBeta:'Beta \u00B7 odaklanma', bandGamma:'Gama \u00B7 konsantrasyon',
       sessionLength:'Seans süresi', timerStart:'Zamanlayıcıyı başlat', timerCancel:'Zamanlayıcıyı iptal et',
       themeLight:'Açık tema', themeDark:'Koyu tema', printBtn:'Yazdır / PDF olarak kaydet',
       journalNamePlaceholder:'İsim (opsiyonel)', journalNotePlaceholder:'Seanstan önce veya sonra nasıl hissediyorsun? (opsiyonel)',
       journalSave:'Günlüğe kaydet', journalEmpty:'Henüz kayıt yok.',
-      footer:'396 \u00B7 417 \u00B7 528 \u00B7 639 \u00B7 741 \u00B7 852 \u00B7 963 Hz \u2014 geleneksel olarak yedi çakraya atfedilen solfej frekansları.<br>174 \u00B7 285 \u00B7 432 Hz, çakra sisteminden bağımsız, sıkça anılan ekstra \u2018şifa frekansları\u2019dır.<br>Bu sayfadaki anlamlar spiritüel ve alternatif geleneklerden gelir ve bilimsel olarak kanıtlanmamıştır.<br>Binaural sesler her kulağa hafifçe farklı bir ton çalar \u2014 mutlaka kulaklık kullanın. Uzun süre dinlerken ses düzeyini düşük tutun.',
+      footer:'396 \u00B7 417 \u00B7 528 \u00B7 639 \u00B7 741 \u00B7 852 \u00B7 963 Hz \u2014 geleneksel olarak yedi çakraya atfedilen solfej frekansları.<br>111 \u00B7 174 \u00B7 285 \u00B7 432 Hz, çakra sisteminden bağımsız, sıkça anılan ekstra \u2018şifa frekansları\u2019dır.<br>Bu sayfadaki anlamlar spiritüel ve alternatif geleneklerden gelir ve bilimsel olarak kanıtlanmamıştır.<br>40 Hz gama seçeneği bir istisnadır: 40 Hz ses ve ışığın dikkat ve biliş üzerine etkisine dair araştırmalar (MIT dahil) gerçek bilimsel çalışmalardır, ancak kanıtlanmış bir tedavi değildir.<br>Binaural sesler ve izokronik tonlar iki frekansı biraz farklı şekillerde birbirine karşı çalar \u2014 binaural kulaklık gerektirir, izokronik hoparlörle de çalışır. Uzun süre dinlerken ses düzeyini düşük tutun.',
       tourSteps:[
         'Bir çakrayı çalmak için çizgi boyunca yedi noktadan birine dokun. Katmanlı bir ses için birkaçını birleştir.',
         'Seçim yapmak istemiyor musun? \u201CHızlı seçim\u201Di kullan \u2014 doğru kombinasyonu otomatik başlatır.',
@@ -974,6 +1035,9 @@ const binauralToggle = document.getElementById('binauralToggle');
 const beatPanel = document.getElementById('beatPanel');
 const beatEl = document.getElementById('beat');
 const beatLabel = document.getElementById('beatLabel');
+const schumannBtn = document.getElementById('schumannBtn');
+const isochronicToggle = document.getElementById('isochronicToggle');
+const gammaBtn = document.getElementById('gammaBtn');
 const sessionLengthEl = document.getElementById('sessionLength');
 const timerBtn = document.getElementById('timerBtn');
 const timerDisplay = document.getElementById('timerDisplay');
@@ -987,6 +1051,9 @@ const breathCircle = document.getElementById('breathCircle');
 const breathPhase = document.getElementById('breathPhase');
 const themeToggle = document.getElementById('themeToggle');
 const shareBtn = document.getElementById('shareBtn');
+const castAudioEl = document.getElementById('castAudio');
+const castBtn = document.getElementById('castBtn');
+const castNote = document.getElementById('castNote');
 const printBtn = document.getElementById('printBtn');
 const journalName = document.getElementById('journalName');
 const journalFeeling = document.getElementById('journalFeeling');
@@ -1001,12 +1068,36 @@ const tourSkip = document.getElementById('tourSkip');
 const startHintEl = document.getElementById('startHint');
 const customFreqInput = document.getElementById('customFreqInput');
 const customFreqBtn = document.getElementById('customFreqBtn');
+const customFreqName = document.getElementById('customFreqName');
+const customFreqSaveBtn = document.getElementById('customFreqSaveBtn');
+const customRowsEl = document.getElementById('customRows');
+const customEmptyNote = document.getElementById('customEmptyNote');
 const spectrumCanvas = document.getElementById('spectrum');
 const spectrumCtx = spectrumCanvas.getContext('2d');
 
 let ctx = null, masterBus = null, analyser = null;
 const active = {}; // id -> { parts: [{osc, gain}] }
 let binaural = false;
+let isochronic = false;
+
+/* --- Wake Lock: scherm niet laten vergrendelen tijdens een sessie --- */
+let wakeLock = null;
+async function requestWakeLock(){
+  try{
+    if('wakeLock' in navigator && !wakeLock){
+      wakeLock = await navigator.wakeLock.request('screen');
+      wakeLock.addEventListener('release', ()=>{ wakeLock = null; });
+    }
+  }catch(e){ /* niet ondersteund of geweigerd, negeren */ }
+}
+function releaseWakeLock(){
+  if(wakeLock){ wakeLock.release().catch(()=>{}); wakeLock = null; }
+}
+document.addEventListener('visibilitychange', async ()=>{
+  if(document.visibilityState === 'visible' && Object.keys(active).length > 0){
+    await requestWakeLock();
+  }
+});
 
 /* --- instellingen onthouden --- */
 const STORAGE_KEY = 'chakra-freq-settings';
@@ -1016,6 +1107,7 @@ function saveSettings(){
       volume: volumeEl.value,
       waveform: waveformEl.value,
       binaural: binaural,
+      isochronic: isochronic,
       beat: beatEl.value,
       light: document.body.classList.contains('light'),
       lang: currentLang,
@@ -1033,6 +1125,11 @@ function loadSettings(){
     if(s.binaural){
       binaural = true;
       binauralToggle.classList.add('toggle-on');
+      beatPanel.classList.add('enabled');
+    }
+    if(s.isochronic){
+      isochronic = true;
+      isochronicToggle.classList.add('toggle-on');
       beatPanel.classList.add('enabled');
     }
     if(s.light){
@@ -1053,7 +1150,19 @@ function ensureCtx(){
     masterBus = ctx.createGain();
     masterBus.gain.value = 1;
     masterBus.connect(analyser);
-    analyser.connect(ctx.destination);
+
+    // Route via een verborgen <audio>-element (i.p.v. rechtstreeks naar ctx.destination),
+    // zodat we de native AirPlay/Cast-apparaatkiezer van de browser kunnen gebruiken.
+    if(ctx.createMediaStreamDestination){
+      const streamDest = ctx.createMediaStreamDestination();
+      analyser.connect(streamDest);
+      castAudioEl.srcObject = streamDest.stream;
+      castAudioEl.play().catch(()=>{ /* volgt alsnog na gebruikersinteractie */ });
+    }else{
+      // fallback voor browsers zonder MediaStreamDestination-ondersteuning
+      analyser.connect(ctx.destination);
+    }
+
     startVisualizer();
     setTimeout(applySharedComboIfNeeded, 0);
   }
@@ -1098,6 +1207,37 @@ function makePart(c, freq, pan){
   return { osc, gain };
 }
 
+function makeIsochronicPart(c, freq, beatRate){
+  // draagtoon met gepulseerde amplitude op de beat-frequentie — werkt ook zonder koptelefoon
+  const carrier = c.createOscillator();
+  carrier.type = waveformEl.value;
+  carrier.frequency.value = freq;
+
+  const pulseGain = c.createGain();
+  pulseGain.gain.value = 0; // wordt volledig door de modulatie aangestuurd
+
+  const modOsc = c.createOscillator();
+  modOsc.type = 'square';
+  modOsc.frequency.value = beatRate;
+  const modDepth = c.createGain();
+  modDepth.gain.value = 0.5;
+  const modOffset = c.createConstantSource();
+  modOffset.offset.value = 0.5;
+
+  modOsc.connect(modDepth).connect(pulseGain.gain);
+  modOffset.connect(pulseGain.gain);
+  modOffset.start();
+  modOsc.start();
+
+  const envGain = c.createGain();
+  envGain.gain.value = 0;
+  carrier.connect(pulseGain).connect(envGain).connect(masterBus);
+  carrier.start();
+  envGain.gain.linearRampToValueAtTime(masterVolume(), c.currentTime + 0.6);
+
+  return { osc: carrier, gain: envGain, extraStops: [modOsc, modOffset] };
+}
+
 function startTone(item){
   const c = ensureCtx();
   const parts = [];
@@ -1105,6 +1245,8 @@ function startTone(item){
     const beat = parseFloat(beatEl.value);
     parts.push(makePart(c, item.freq - beat/2, -1));
     parts.push(makePart(c, item.freq + beat/2, 1));
+  }else if(isochronic){
+    parts.push(makeIsochronicPart(c, item.freq, parseFloat(beatEl.value)));
   }else{
     parts.push(makePart(c, item.freq, 0));
   }
@@ -1121,6 +1263,9 @@ function stopTone(id, fadeSeconds=0.4){
     p.gain.gain.setValueAtTime(p.gain.gain.value, now);
     p.gain.gain.linearRampToValueAtTime(0, now + fadeSeconds);
     p.osc.stop(now + fadeSeconds + 0.05);
+    if(p.extraStops){
+      p.extraStops.forEach(n => n.stop(now + fadeSeconds + 0.05));
+    }
   });
   delete active[id];
 }
@@ -1241,7 +1386,8 @@ function startVisualizer(){
   draw();
 }
 
-function buildRow(item, container){
+function buildRow(item, container, opts){
+  opts = opts || {};
   const row = document.createElement('div');
   row.className = 'row';
   row.style.setProperty('--c', item.color);
@@ -1268,11 +1414,29 @@ function buildRow(item, container){
   info.appendChild(freqEl);
   info.appendChild(descEl);
 
+  let deleteEl = null;
+  if(opts.deletable){
+    deleteEl = document.createElement('button');
+    deleteEl.className = 'delete-link';
+    deleteEl.textContent = tr_('deleteLink');
+    deleteEl.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      vibrate();
+      if(elRefs[item.id] && elRefs[item.id].btn.classList.contains('on')){
+        setNodeUI(item.id, false);
+        stopTone(item.id);
+        refreshSpine();
+      }
+      opts.onDelete && opts.onDelete(item.id);
+    });
+    info.appendChild(deleteEl);
+  }
+
   row.appendChild(info);
   row.appendChild(btn);
   row.appendChild(visual);
   container.appendChild(row);
-  elRefs[item.id] = { btn, row, nameSaEl, nameNlEl, descEl };
+  elRefs[item.id] = { btn, row, nameSaEl, nameNlEl, descEl, deleteEl };
   updateRowText(item);
 
   btn.addEventListener('click', ()=>{
@@ -1293,11 +1457,19 @@ function updateRowText(item){
   const ref = elRefs[item.id];
   if(!ref) return;
   const t = I18N[currentLang];
-  const displayName = item.sa || t.names[item.id];
+  let displayName, subText;
+  if(item.custom){
+    displayName = item.name || t.ui.customSavedDefault;
+    subText = t.ui.customSavedDefault;
+  }else{
+    displayName = item.sa || t.names[item.id];
+    subText = item.sa ? t.names[item.id] : (t.subtitles[item.id] || '');
+  }
   ref.nameSaEl.textContent = displayName;
-  ref.nameNlEl.textContent = item.sa ? t.names[item.id] : (t.subtitles[item.id] || '');
+  ref.nameNlEl.textContent = subText;
   ref.descEl.textContent = t.descs[item.id] || '';
   ref.btn.setAttribute('aria-label', `${displayName} — ${item.freq} Hz`);
+  if(ref.deleteEl) ref.deleteEl.textContent = t.ui.deleteLink;
 }
 
 CHAKRAS.forEach(chakra => buildRow(chakra, rowsEl));
@@ -1335,24 +1507,97 @@ customFreqBtn.addEventListener('click', ()=>{
   refreshSpine();
 });
 
-/* --- Binaurale beats --- */
+/* --- Eigen frequenties opslaan/verwijderen --- */
+const CUSTOM_FREQS_KEY = 'chakra-freq-custom-list';
+function loadCustomFreqs(){
+  try{ return JSON.parse(localStorage.getItem(CUSTOM_FREQS_KEY) || '[]'); }
+  catch(e){ return []; }
+}
+function saveCustomFreqsList(list){
+  try{ localStorage.setItem(CUSTOM_FREQS_KEY, JSON.stringify(list)); }
+  catch(e){ /* negeren */ }
+}
+function renderCustomFreqs(){
+  const list = loadCustomFreqs();
+  // stop and clear any currently playing custom rows before rebuild
+  Object.keys(itemsById).forEach(id=>{
+    if(itemsById[id] && itemsById[id].custom && active[id]){
+      stopTone(id, 0.2);
+    }
+  });
+  customRowsEl.innerHTML = '';
+  list.forEach(entry=>{
+    const item = { id: entry.id, name: entry.name, freq: entry.freq, color:'#8ee0c8', custom:true };
+    itemsById[entry.id] = item;
+    buildRow(item, customRowsEl, { deletable:true, onDelete: deleteCustomFreq });
+  });
+  customEmptyNote.style.display = list.length === 0 ? '' : 'none';
+  refreshSpine();
+}
+function deleteCustomFreq(id){
+  const list = loadCustomFreqs().filter(e => e.id !== id);
+  saveCustomFreqsList(list);
+  delete itemsById[id];
+  delete elRefs[id];
+  renderCustomFreqs();
+}
+customFreqSaveBtn.addEventListener('click', ()=>{
+  vibrate();
+  const freq = Math.min(2000, Math.max(20, parseFloat(customFreqInput.value) || 111));
+  const name = customFreqName.value.trim();
+  const list = loadCustomFreqs();
+  const entry = { id: `custom-${Date.now()}`, name: name || `${freq} Hz`, freq };
+  list.push(entry);
+  saveCustomFreqsList(list);
+  customFreqName.value = '';
+  renderCustomFreqs();
+});
+renderCustomFreqs();
+
+/* --- Binaurale beats & isochronische tonen --- */
 function bandKey(hz){
   if(hz < 4) return 'bandDelta';
   if(hz < 8) return 'bandTheta';
   if(hz < 13) return 'bandAlpha';
-  return 'bandBeta';
+  if(hz < 30) return 'bandBeta';
+  return 'bandGamma';
 }
 function updateBeatLabel(){
-  const bandText = tr_(bandKey(parseFloat(beatEl.value))).split(' \u00B7 ')[1];
-  beatLabel.textContent = `${beatEl.value} Hz \u00B7 ${bandText}`;
+  const val = Math.round(parseFloat(beatEl.value) * 100) / 100;
+  const bandText = tr_(bandKey(val)).split(' \u00B7 ')[1];
+  beatLabel.textContent = `${val} Hz \u00B7 ${bandText}`;
 }
 updateBeatLabel();
 
-binauralToggle.addEventListener('click', ()=>{
-  binaural = !binaural;
+function setBinaural(on){
+  binaural = on;
+  if(binaural) isochronic = false;
   binauralToggle.classList.toggle('toggle-on', binaural);
   binauralToggle.textContent = tr_(binaural ? 'binauralOn' : 'binauralOff');
-  beatPanel.classList.toggle('enabled', binaural);
+  isochronicToggle.classList.toggle('toggle-on', isochronic);
+  isochronicToggle.textContent = tr_(isochronic ? 'isochronicOn' : 'isochronicOff');
+  beatPanel.classList.toggle('enabled', binaural || isochronic);
+}
+function setIsochronic(on){
+  isochronic = on;
+  if(isochronic) binaural = false;
+  isochronicToggle.classList.toggle('toggle-on', isochronic);
+  isochronicToggle.textContent = tr_(isochronic ? 'isochronicOn' : 'isochronicOff');
+  binauralToggle.classList.toggle('toggle-on', binaural);
+  binauralToggle.textContent = tr_(binaural ? 'binauralOn' : 'binauralOff');
+  beatPanel.classList.toggle('enabled', binaural || isochronic);
+}
+
+binauralToggle.addEventListener('click', ()=>{
+  vibrate();
+  setBinaural(!binaural);
+  restartActiveTones();
+  saveSettings();
+});
+
+isochronicToggle.addEventListener('click', ()=>{
+  vibrate();
+  setIsochronic(!isochronic);
   restartActiveTones();
   saveSettings();
 });
@@ -1361,7 +1606,25 @@ beatEl.addEventListener('input', ()=>{
   updateBeatLabel();
 });
 beatEl.addEventListener('change', ()=>{
-  if(binaural) restartActiveTones();
+  if(binaural || isochronic) restartActiveTones();
+  saveSettings();
+});
+
+schumannBtn.addEventListener('click', ()=>{
+  vibrate();
+  beatEl.value = 7.83;
+  updateBeatLabel();
+  if(!binaural && !isochronic) setBinaural(true);
+  restartActiveTones();
+  saveSettings();
+});
+
+gammaBtn.addEventListener('click', ()=>{
+  vibrate();
+  beatEl.value = 40;
+  updateBeatLabel();
+  if(!binaural && !isochronic) setBinaural(true);
+  restartActiveTones();
   saveSettings();
 });
 
@@ -1435,25 +1698,6 @@ QUICKPICKS.forEach(pick=>{
   quickButtonsEl.appendChild(btn);
 });
 
-/* --- Wake Lock: scherm niet laten vergrendelen tijdens een sessie --- */
-let wakeLock = null;
-async function requestWakeLock(){
-  try{
-    if('wakeLock' in navigator && !wakeLock){
-      wakeLock = await navigator.wakeLock.request('screen');
-      wakeLock.addEventListener('release', ()=>{ wakeLock = null; });
-    }
-  }catch(e){ /* niet ondersteund of geweigerd, negeren */ }
-}
-function releaseWakeLock(){
-  if(wakeLock){ wakeLock.release().catch(()=>{}); wakeLock = null; }
-}
-document.addEventListener('visibilitychange', async ()=>{
-  if(document.visibilityState === 'visible' && Object.keys(active).length > 0){
-    await requestWakeLock();
-  }
-});
-
 /* --- Journey: geleide reis van wortel naar kruin --- */
 const ROOT_TO_CROWN = [...CHAKRAS].reverse();
 let journeyTimeouts = [];
@@ -1511,11 +1755,12 @@ journeyBtn.addEventListener('click', ()=>{
 });
 
 /* --- Achtergrondgeluid (gesynthetiseerd, geen externe bestanden nodig) --- */
-const AMBIENT_LEVELS = { rain: 0.16, ocean: 0.20, bowl: 0.14 };
+const AMBIENT_LEVELS = { rain: 0.16, ocean: 0.20, bowl: 0.14, gong: 0.5 };
 const AMBIENTS = [
   { id:'rain' },
   { id:'ocean' },
   { id:'bowl' },
+  { id:'gong' },
 ];
 const ambientNodes = {};
 const ambientBtnRefs = {};
@@ -1582,6 +1827,42 @@ function startAmbient(id){
     gain.connect(masterBus);
     gain.gain.linearRampToValueAtTime(ambientTarget('bowl'), c.currentTime + 2.5);
     ambientNodes.bowl = { gainNode: gain, stop(fade){ const now=c.currentTime; gain.gain.linearRampToValueAtTime(0, now+fade); oscs.forEach(o=>o.stop(now+fade+0.1)); } };
+  }else if(id === 'gong'){
+    // Gong met 432 & 528 Hz als hoofdpartialen, plus boventonen voor een metalige, uitklinkende slag
+    const bus = c.createGain();
+    bus.gain.value = 0;
+    bus.connect(masterBus);
+    bus.gain.linearRampToValueAtTime(ambientTarget('gong'), c.currentTime + 1);
+
+    let gongTimeoutId = null;
+    function strike(){
+      const now = c.currentTime;
+      const partials = [432, 528, 216, 864, 660, 330];
+      partials.forEach((f, i)=>{
+        const o = c.createOscillator();
+        o.type = 'sine';
+        o.frequency.value = f * (1 + (Math.random()-0.5)*0.006);
+        const g = c.createGain();
+        const peak = 0.9 / (i + 1.6);
+        g.gain.setValueAtTime(0, now);
+        g.gain.linearRampToValueAtTime(peak, now + 0.06);
+        g.gain.exponentialRampToValueAtTime(0.001, now + 9 + Math.random()*4);
+        o.connect(g).connect(bus);
+        o.start(now);
+        o.stop(now + 14);
+      });
+      gongTimeoutId = setTimeout(strike, 13000 + Math.random()*5000);
+    }
+    strike();
+
+    ambientNodes.gong = {
+      gainNode: bus,
+      stop(fade){
+        if(gongTimeoutId) clearTimeout(gongTimeoutId);
+        const now = c.currentTime;
+        bus.gain.linearRampToValueAtTime(0, now + fade);
+      }
+    };
   }
 }
 
@@ -1706,6 +1987,46 @@ shareBtn.addEventListener('click', async ()=>{
   setTimeout(()=>{ shareBtn.textContent = original; }, 2200);
 });
 
+/* --- Casten naar tv/speaker (AirPlay / Chromecast via de browser) --- */
+function castSupported(){
+  return !!(castAudioEl.remote && typeof castAudioEl.remote.prompt === 'function')
+      || typeof castAudioEl.webkitShowPlaybackTargetPicker === 'function';
+}
+async function openCastPicker(){
+  vibrate();
+  ensureCtx(); // zorgt dat het audio-element al een stream heeft voordat we het kiesscherm openen
+  try{
+    if(castAudioEl.remote && typeof castAudioEl.remote.prompt === 'function'){
+      await castAudioEl.remote.prompt();
+      return;
+    }
+  }catch(e){ /* geannuleerd door gebruiker of niet beschikbaar, val terug op AirPlay hieronder */ }
+  if(typeof castAudioEl.webkitShowPlaybackTargetPicker === 'function'){
+    castAudioEl.webkitShowPlaybackTargetPicker();
+    return;
+  }
+  castNote.style.display = '';
+  castNote.textContent = tr_('castUnsupported');
+}
+castBtn.addEventListener('click', openCastPicker);
+
+// visuele terugkoppeling of er daadwerkelijk gecast wordt
+if('remote' in castAudioEl){
+  castAudioEl.remote.addEventListener?.('connect', ()=>{
+    castBtn.classList.add('toggle-on');
+    castBtn.textContent = tr_('castConnected');
+  });
+  castAudioEl.remote.addEventListener?.('disconnect', ()=>{
+    castBtn.classList.remove('toggle-on');
+    castBtn.textContent = tr_('castLabel');
+  });
+}
+castAudioEl.addEventListener('webkitcurrentplaybacktargetiswirelesschanged', ()=>{
+  const active = !!castAudioEl.webkitCurrentPlaybackTargetIsWireless;
+  castBtn.classList.toggle('toggle-on', active);
+  castBtn.textContent = tr_(active ? 'castConnected' : 'castLabel');
+});
+
 function parseShareHash(){
   if(!location.hash) return null;
   const params = new URLSearchParams(location.hash.replace('#',''));
@@ -1794,6 +2115,7 @@ function applyLanguage(lang){
   document.getElementById('startHintText').textContent = t.startHint;
 
   document.getElementById('txtDividerExtra').textContent = t.dividerExtra;
+  document.getElementById('txtDividerMine').textContent = t.dividerMine;
   document.getElementById('txtDividerQuick').textContent = t.dividerQuick;
   document.getElementById('txtDividerJourney').textContent = t.dividerJourney;
   document.getElementById('txtDividerBreath').textContent = t.dividerBreath;
@@ -1804,6 +2126,8 @@ function applyLanguage(lang){
   quickNoteEl.textContent = t.quickNoteDefault;
   journeyBtn.textContent = journeyActive ? t.journeyStop : t.journeyStart;
   shareBtn.textContent = t.shareLabel;
+  const isCasting = castBtn.classList.contains('toggle-on');
+  castBtn.textContent = isCasting ? t.castConnected : t.castLabel;
   breathToggle.textContent = breathing ? t.breathToggleOn : t.breathToggleOff;
 
   document.getElementById('txtVolume').textContent = t.volume;
@@ -1811,7 +2135,14 @@ function applyLanguage(lang){
   stopAllBtn.textContent = t.stopAll;
   document.getElementById('txtCustomFreq').textContent = t.customFreqLabel;
   customFreqBtn.textContent = customFreqBtn.classList.contains('toggle-on') ? t.customFreqStop : t.customFreqPlay;
+  document.getElementById('txtCustomName').textContent = t.customNameLabel;
+  customFreqName.placeholder = t.customNamePlaceholder;
+  customFreqSaveBtn.textContent = t.customSaveBtn;
+  customEmptyNote.textContent = t.customEmptyNote;
+  schumannBtn.textContent = t.schumannPreset;
   binauralToggle.textContent = binaural ? t.binauralOn : t.binauralOff;
+  isochronicToggle.textContent = isochronic ? t.isochronicOn : t.isochronicOff;
+  gammaBtn.textContent = t.gammaPreset;
   updateBeatLabel();
   document.getElementById('txtSessionLength').textContent = t.sessionLength;
   timerBtn.textContent = sessionEndTime ? t.timerCancel : t.timerStart;
@@ -1836,6 +2167,7 @@ function applyLanguage(lang){
   });
 
   ALL_ITEMS.forEach(updateRowText);
+  Object.values(itemsById).filter(i => i.custom).forEach(updateRowText);
 
   if(!tourBanner.classList.contains('hidden')){
     showTourStep();
