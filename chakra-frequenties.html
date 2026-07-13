@@ -619,7 +619,7 @@
 <div class="start-hint" id="startHint">
   <div class="start-hint-inner">
     <div class="dot">&#9679;</div>
-    Tik om geluid te activeren
+    <span id="startHintText">Tik om geluid te activeren</span>
   </div>
 </div>
 
@@ -636,9 +636,10 @@
 
 <div class="wrap">
   <header>
-    <div class="eyebrow">Sushumna &middot; 7 centra</div>
-    <h1>Chakra Frequenties</h1>
-    <p class="sub">Selecteer een of meerdere chakra's om de bijbehorende toon te horen. Combineer centra voor een samengestelde klank, of luister er &eacute;&eacute;n voor &eacute;&eacute;n.</p>
+    <div class="eyebrow" id="txtEyebrow">Sushumna &middot; 7 centra</div>
+    <h1 id="txtTitle">Chakra Frequenties</h1>
+    <p class="sub" id="txtSub">Selecteer een of meerdere chakra's om de bijbehorende toon te horen. Combineer centra voor een samengestelde klank, of luister er &eacute;&eacute;n voor &eacute;&eacute;n.</p>
+    <div class="presets-bar" id="langButtons" style="margin-top:16px;"></div>
   </header>
 
   <div class="column">
@@ -646,47 +647,47 @@
     <div id="rows"></div>
   </div>
 
-  <div class="extra-divider"><span>Extra healing frequenties</span></div>
+  <div class="extra-divider"><span id="txtDividerExtra">Extra healing frequenties</span></div>
 
   <div class="column">
     <div id="extraRows"></div>
   </div>
 
-  <div class="extra-divider"><span>Kies snel</span></div>
+  <div class="extra-divider"><span id="txtDividerQuick">Kies snel</span></div>
   <div class="presets-bar" id="quickButtons"></div>
   <p class="mood-note" id="quickNote">Kies wat je nu nodig hebt — de bijpassende chakra's starten automatisch.</p>
 
-  <div class="extra-divider"><span>Journey &amp; delen</span></div>
+  <div class="extra-divider"><span id="txtDividerJourney">Journey &amp; delen</span></div>
   <div class="presets-bar">
     <button class="pill" id="journeyBtn">Start journey (14 min, wortel &rarr; kruin)</button>
     <button class="pill" id="shareBtn">Deel deze combinatie</button>
   </div>
 
-  <div class="extra-divider"><span>Ademhaling</span></div>
+  <div class="extra-divider"><span id="txtDividerBreath">Ademhaling</span></div>
   <div class="breathing-wrap">
     <button class="pill" id="breathToggle">Ademhalingsgeleider: uit</button>
     <div class="breath-circle" id="breathCircle"></div>
     <div class="breath-phase" id="breathPhase"></div>
   </div>
 
-  <div class="extra-divider"><span>Achtergrondgeluid</span></div>
+  <div class="extra-divider"><span id="txtDividerAmbient">Achtergrondgeluid</span></div>
   <div class="presets-bar" id="ambientButtons"></div>
 
   <div class="visualizer-wrap">
     <canvas id="spectrum"></canvas>
   </div>
 
-  <div class="extra-divider"><span>Dagboek</span></div>
+  <div class="extra-divider"><span id="txtDividerJournal">Dagboek</span></div>
   <div class="journal">
     <div class="journal-row">
       <input type="text" id="journalName" placeholder="Naam (optioneel)" maxlength="24">
       <select id="journalFeeling">
-        <option value="&#128524; Rustig">&#128524; Rustig</option>
-        <option value="&#128522; Blij">&#128522; Blij</option>
-        <option value="&#9889; Energiek">&#9889; Energiek</option>
-        <option value="&#128564; Moe">&#128564; Moe</option>
-        <option value="&#128546; Verdrietig">&#128546; Verdrietig</option>
-        <option value="&#128531; Gestrest">&#128531; Gestrest</option>
+        <option value="rustig">&#128524; Rustig</option>
+        <option value="blij">&#128522; Blij</option>
+        <option value="energiek">&#9889; Energiek</option>
+        <option value="moe">&#128564; Moe</option>
+        <option value="verdrietig">&#128546; Verdrietig</option>
+        <option value="gestrest">&#128531; Gestrest</option>
       </select>
     </div>
     <textarea id="journalNote" placeholder="Hoe voel je je, voor of na de sessie? (optioneel)"></textarea>
@@ -694,15 +695,15 @@
     <div class="journal-list" id="journalList"></div>
   </div>
 
-  <div class="extra-divider"><span>Instellingen</span></div>
+  <div class="extra-divider"><span id="txtDividerSettings">Instellingen</span></div>
   <div class="controls">
     <div class="controls-row">
       <div class="ctrl-group">
-        <span>Volume</span>
+        <span id="txtVolume">Volume</span>
         <input type="range" id="volume" min="0" max="100" value="35">
       </div>
       <div class="ctrl-group">
-        <span>Golfvorm</span>
+        <span id="txtWaveform">Golfvorm</span>
         <select id="waveform">
           <option value="sine">Sine</option>
           <option value="triangle">Triangle</option>
@@ -714,7 +715,7 @@
 
     <div class="controls-row">
       <div class="custom-freq">
-        <span>Eigen frequentie</span>
+        <span id="txtCustomFreq">Eigen frequentie</span>
         <input type="number" id="customFreqInput" min="20" max="2000" step="1" value="111" placeholder="Hz">
         <span>Hz</span>
       </div>
@@ -731,7 +732,7 @@
 
     <div class="controls-row">
       <div class="ctrl-group">
-        <span>Sessieduur</span>
+        <span id="txtSessionLength">Sessieduur</span>
         <select id="sessionLength">
           <option value="5">5 min</option>
           <option value="10" selected>10 min</option>
@@ -749,7 +750,7 @@
     </div>
   </div>
 
-  <footer>
+  <footer id="txtFooter">
     396 &middot; 417 &middot; 528 &middot; 639 &middot; 741 &middot; 852 &middot; 963 Hz — solfeggio-frequenties, traditioneel toegewezen aan de zeven chakra's.<br>
     174 &middot; 285 &middot; 432 Hz zijn extra, veelgenoemde &lsquo;healing frequencies&rsquo; die los staan van het chakrasysteem.<br>
     De betekenissen op deze pagina komen uit spirituele en alternatieve tradities en zijn niet wetenschappelijk onderbouwd.<br>
@@ -759,30 +760,203 @@
 
 <script>
 const CHAKRAS = [
-  { id:'sahasrara',  sa:'Sahasrara',  nl:'Kruinchakra',        freq:963, color:'#b98cff',
-    desc:'Spiritueel bewustzijn en verbinding met iets groters dan jezelf.' },
-  { id:'ajna',       sa:'Ajna',       nl:'Derde-oogchakra',    freq:852, color:'#7c8cff',
-    desc:'Intuïtie en helder inzicht voorbij het letterlijke.' },
-  { id:'vishuddha',  sa:'Vishuddha',  nl:'Keelchakra',         freq:741, color:'#4fa8e0',
-    desc:'Communicatie en jezelf durven uiten.' },
-  { id:'anahata',    sa:'Anahata',    nl:'Hartchakra',         freq:639, color:'#4fbf7a',
-    desc:'Liefde, mededogen en verbinding met anderen.' },
-  { id:'manipura',   sa:'Manipura',   nl:'Zonnevlechtchakra',  freq:528, color:'#e0c23f',
-    desc:'Persoonlijke kracht, zelfvertrouwen en wilskracht.' },
-  { id:'svadhisthana', sa:'Svadhisthana', nl:'Sacraalchakra',  freq:417, color:'#e0873f',
-    desc:'Creativiteit, emotie en plezier.' },
-  { id:'muladhara',  sa:'Muladhara',  nl:'Wortelchakra',       freq:396, color:'#d2453f',
-    desc:'Veiligheid, aarding en je basisbehoeften.' },
+  { id:'sahasrara',  sa:'Sahasrara',  freq:963, color:'#b98cff' },
+  { id:'ajna',       sa:'Ajna',       freq:852, color:'#7c8cff' },
+  { id:'vishuddha',  sa:'Vishuddha',  freq:741, color:'#4fa8e0' },
+  { id:'anahata',    sa:'Anahata',    freq:639, color:'#4fbf7a' },
+  { id:'manipura',   sa:'Manipura',   freq:528, color:'#e0c23f' },
+  { id:'svadhisthana', sa:'Svadhisthana', freq:417, color:'#e0873f' },
+  { id:'muladhara',  sa:'Muladhara',  freq:396, color:'#d2453f' },
 ];
 
 const EXTRAS = [
-  { id:'p174', sa:'Pijnverlichting', nl:'Solfeggio', freq:174, color:'#e8d9a8',
-    desc:'Verlichting van pijn, spanning en een gevoel van veiligheid.' },
-  { id:'p285', sa:'Weefselherstel', nl:'Solfeggio', freq:285, color:'#e8d9a8',
-    desc:'Herstel van weefsel en energie, bijvoorbeeld na inspanning.' },
-  { id:'healing', sa:'Healing Frequency', nl:'Universele stemming', freq:432, color:'#e8d9a8',
-    desc:'Alternatieve stemming voor innerlijke rust en harmonie.' },
+  { id:'p174', sa:'', freq:174, color:'#e8d9a8' },
+  { id:'p285', sa:'', freq:285, color:'#e8d9a8' },
+  { id:'healing', sa:'', freq:432, color:'#e8d9a8' },
 ];
+
+const I18N = {
+  nl: {
+    names: { sahasrara:'Kruinchakra', ajna:'Derde-oogchakra', vishuddha:'Keelchakra', anahata:'Hartchakra', manipura:'Zonnevlechtchakra', svadhisthana:'Sacraalchakra', muladhara:'Wortelchakra', p174:'Pijnverlichting', p285:'Weefselherstel', healing:'Healing Frequency' },
+    subtitles: { p174:'Solfeggio', p285:'Solfeggio', healing:'Universele stemming' },
+    descs: {
+      sahasrara:'Spiritueel bewustzijn en verbinding met iets groters dan jezelf.',
+      ajna:'Intuïtie en helder inzicht voorbij het letterlijke.',
+      vishuddha:'Communicatie en jezelf durven uiten.',
+      anahata:'Liefde, mededogen en verbinding met anderen.',
+      manipura:'Persoonlijke kracht, zelfvertrouwen en wilskracht.',
+      svadhisthana:'Creativiteit, emotie en plezier.',
+      muladhara:'Veiligheid, aarding en je basisbehoeften.',
+      p174:'Verlichting van pijn, spanning en een gevoel van veiligheid.',
+      p285:'Herstel van weefsel en energie, bijvoorbeeld na inspanning.',
+      healing:'Alternatieve stemming voor innerlijke rust en harmonie.',
+    },
+    quick: {
+      stress:{label:'Stress verminderen', note:'Zonnevlechtchakra en 174 Hz kalmeren het zenuwstelsel en verlichten spanning.'},
+      energy:{label:'Energie & vitaliteit', note:'Wortel- en zonnevlechtchakra activeren kracht en aandrijving.'},
+      sleep:{label:'Beter slapen', note:'432 Hz als rustige, lage stemming om af te bouwen richting slaap.'},
+      calm:{label:'Innerlijke rust', note:'Hartchakra en pijnverlichting brengen lichaam en geest tot rust.'},
+      grief:{label:'Verdriet verwerken', note:'Hartchakra en weefselherstel ondersteunen emotionele heling.'},
+      focus:{label:'Focus & concentratie', note:'Derde-oogchakra voor helder, gericht denken.'},
+      ground:{label:'Aarden & angst loslaten', note:'Wortel- en sacraalchakra helpen spanning en onzekerheid los te laten.'},
+      heart:{label:'Hart openen', note:'Hart-, keel- en derde-oogchakra voor eerlijke, open verbinding.'},
+      spiritual:{label:'Spirituele verbinding', note:'Kruin- en derde-oogchakra voor meditatie en verruimd bewustzijn.'},
+      all:{label:'Alle chakra\u2019s', note:'Alle zeven chakra\u2019s tegelijk, voor een volledige klankbadervaring.'},
+    },
+    feelings: { rustig:'\u{1F60C} Rustig', blij:'\u{1F60A} Blij', energiek:'\u26A1 Energiek', moe:'\u{1F634} Moe', verdrietig:'\u{1F622} Verdrietig', gestrest:'\u{1F61F} Gestrest' },
+    ambient: { rain:'Regen', ocean:'Oceaan', bowl:'Klankschaal' },
+    ui: {
+      eyebrow:'Sushumna \u00B7 7 centra', title:'Chakra Frequenties',
+      sub:'Selecteer een of meerdere chakra\u2019s om de bijbehorende toon te horen. Combineer centra voor een samengestelde klank, of luister er \u00E9\u00E9n voor \u00E9\u00E9n.',
+      startHint:'Tik om geluid te activeren',
+      dividerExtra:'Extra healing frequenties', dividerQuick:'Kies snel', dividerJourney:'Journey & delen',
+      dividerBreath:'Ademhaling', dividerAmbient:'Achtergrondgeluid', dividerJournal:'Dagboek', dividerSettings:'Instellingen',
+      quickNoteDefault:'Kies wat je nu nodig hebt \u2014 de bijpassende chakra\u2019s starten automatisch.',
+      journeyStart:'Start journey (14 min, wortel \u2192 kruin)', journeyStop:'Stop journey',
+      journeyMsg:(name,desc)=>`Journey: ${name} \u2014 ${desc}`, journeyDone:'Journey afgerond.',
+      shareLabel:'Deel deze combinatie', shareCopied:'Link gekopieerd!', shareFailed:'Kopi\u00EBren mislukt',
+      breathToggleOff:'Ademhalingsgeleider: uit', breathToggleOn:'Ademhalingsgeleider: aan',
+      breathIn:'Adem in \u2014 4s', breathHold:'Vasthouden \u2014 7s', breathOut:'Adem uit \u2014 8s',
+      volume:'Volume', waveform:'Golfvorm', stopAll:'Alles stoppen',
+      customFreqLabel:'Eigen frequentie', customFreqPlay:'Afspelen', customFreqStop:'Stoppen',
+      binauralOff:'Binaurale beats: uit', binauralOn:'Binaurale beats: aan',
+      bandDelta:'Delta \u00B7 diepe slaap', bandTheta:'Theta \u00B7 ontspanning', bandAlpha:'Alpha \u00B7 alerte rust', bandBeta:'Beta \u00B7 focus',
+      sessionLength:'Sessieduur', timerStart:'Start timer', timerCancel:'Annuleer timer',
+      themeLight:'Licht thema', themeDark:'Donker thema', printBtn:'Print / opslaan als PDF',
+      journalNamePlaceholder:'Naam (optioneel)', journalNotePlaceholder:'Hoe voel je je, voor of na de sessie? (optioneel)',
+      journalSave:'Opslaan in dagboek', journalEmpty:'Nog geen aantekeningen.',
+      footer:'396 \u00B7 417 \u00B7 528 \u00B7 639 \u00B7 741 \u00B7 852 \u00B7 963 Hz \u2014 solfeggio-frequenties, traditioneel toegewezen aan de zeven chakra\u2019s.<br>174 \u00B7 285 \u00B7 432 Hz zijn extra, veelgenoemde \u2018healing frequencies\u2019 die los staan van het chakrasysteem.<br>De betekenissen op deze pagina komen uit spirituele en alternatieve tradities en zijn niet wetenschappelijk onderbouwd.<br>Binaurale beats spelen twee net iets verschillende tonen per oor \u2014 gebruik altijd een koptelefoon. Zet het volume laag bij langdurig luisteren.',
+      tourSteps:[
+        'Tik op een van de zeven punten langs de lijn om een chakra af te spelen. Combineer er meerdere voor een samengestelde klank.',
+        'Geen zin om te kiezen? Gebruik \u201CKies snel\u201D \u2014 die starten automatisch de juiste combinatie op gevoel of thema.',
+        'Onderin vind je volume, timer, journey-modus, achtergrondgeluid en een dagboek om bij te houden hoe het voelt.',
+      ],
+      tourClose:'Sluiten', tourNext:'Volgende', tourDone:'Klaar',
+      sharedComboLoaded:'Gedeelde combinatie geladen.',
+    },
+  },
+  en: {
+    names: { sahasrara:'Crown Chakra', ajna:'Third-Eye Chakra', vishuddha:'Throat Chakra', anahata:'Heart Chakra', manipura:'Solar Plexus Chakra', svadhisthana:'Sacral Chakra', muladhara:'Root Chakra', p174:'Pain Relief', p285:'Tissue Repair', healing:'Healing Frequency' },
+    subtitles: { p174:'Solfeggio', p285:'Solfeggio', healing:'Universal tuning' },
+    descs: {
+      sahasrara:'Spiritual awareness and connection to something greater than yourself.',
+      ajna:'Intuition and clear insight beyond the literal.',
+      vishuddha:'Communication and daring to express yourself.',
+      anahata:'Love, compassion and connection with others.',
+      manipura:'Personal power, confidence and willpower.',
+      svadhisthana:'Creativity, emotion and pleasure.',
+      muladhara:'Safety, grounding and your basic needs.',
+      p174:'Relief from pain, tension and a sense of safety.',
+      p285:'Repair of tissue and energy, for example after exertion.',
+      healing:'Alternative tuning for inner peace and harmony.',
+    },
+    quick: {
+      stress:{label:'Reduce stress', note:'Solar plexus and 174 Hz calm the nervous system and ease tension.'},
+      energy:{label:'Energy & vitality', note:'Root and solar plexus chakras activate strength and drive.'},
+      sleep:{label:'Better sleep', note:'432 Hz as a calm, low tuning to wind down toward sleep.'},
+      calm:{label:'Inner calm', note:'Heart chakra and pain relief bring body and mind to rest.'},
+      grief:{label:'Processing grief', note:'Heart chakra and tissue repair support emotional healing.'},
+      focus:{label:'Focus & concentration', note:'Third-eye chakra for clear, focused thinking.'},
+      ground:{label:'Grounding & releasing fear', note:'Root and sacral chakras help release tension and uncertainty.'},
+      heart:{label:'Opening the heart', note:'Heart, throat and third-eye chakras for honest, open connection.'},
+      spiritual:{label:'Spiritual connection', note:'Crown and third-eye chakras for meditation and expanded awareness.'},
+      all:{label:'All chakras', note:'All seven chakras at once, for a full sound-bath experience.'},
+    },
+    feelings: { rustig:'\u{1F60C} Calm', blij:'\u{1F60A} Happy', energiek:'\u26A1 Energetic', moe:'\u{1F634} Tired', verdrietig:'\u{1F622} Sad', gestrest:'\u{1F61F} Stressed' },
+    ambient: { rain:'Rain', ocean:'Ocean', bowl:'Singing bowl' },
+    ui: {
+      eyebrow:'Sushumna \u00B7 7 centers', title:'Chakra Frequencies',
+      sub:'Select one or more chakras to hear the matching tone. Combine centers for a layered sound, or listen to them one at a time.',
+      startHint:'Tap to enable sound',
+      dividerExtra:'Extra healing frequencies', dividerQuick:'Quick pick', dividerJourney:'Journey & share',
+      dividerBreath:'Breathing', dividerAmbient:'Background sound', dividerJournal:'Journal', dividerSettings:'Settings',
+      quickNoteDefault:'Choose what you need right now \u2014 the matching chakras start automatically.',
+      journeyStart:'Start journey (14 min, root \u2192 crown)', journeyStop:'Stop journey',
+      journeyMsg:(name,desc)=>`Journey: ${name} \u2014 ${desc}`, journeyDone:'Journey complete.',
+      shareLabel:'Share this combination', shareCopied:'Link copied!', shareFailed:'Copy failed',
+      breathToggleOff:'Breathing guide: off', breathToggleOn:'Breathing guide: on',
+      breathIn:'Breathe in \u2014 4s', breathHold:'Hold \u2014 7s', breathOut:'Breathe out \u2014 8s',
+      volume:'Volume', waveform:'Waveform', stopAll:'Stop all',
+      customFreqLabel:'Custom frequency', customFreqPlay:'Play', customFreqStop:'Stop',
+      binauralOff:'Binaural beats: off', binauralOn:'Binaural beats: on',
+      bandDelta:'Delta \u00B7 deep sleep', bandTheta:'Theta \u00B7 relaxation', bandAlpha:'Alpha \u00B7 alert calm', bandBeta:'Beta \u00B7 focus',
+      sessionLength:'Session length', timerStart:'Start timer', timerCancel:'Cancel timer',
+      themeLight:'Light theme', themeDark:'Dark theme', printBtn:'Print / save as PDF',
+      journalNamePlaceholder:'Name (optional)', journalNotePlaceholder:'How do you feel, before or after the session? (optional)',
+      journalSave:'Save to journal', journalEmpty:'No entries yet.',
+      footer:'396 \u00B7 417 \u00B7 528 \u00B7 639 \u00B7 741 \u00B7 852 \u00B7 963 Hz \u2014 solfeggio frequencies, traditionally assigned to the seven chakras.<br>174 \u00B7 285 \u00B7 432 Hz are extra, commonly cited \u2018healing frequencies\u2019 that are separate from the chakra system.<br>The meanings on this page come from spiritual and alternative traditions and are not scientifically proven.<br>Binaural beats play two slightly different tones per ear \u2014 always use headphones. Keep the volume low during extended listening.',
+      tourSteps:[
+        'Tap one of the seven points along the line to play a chakra. Combine several for a layered sound.',
+        'Don\u2019t feel like choosing? Use \u201CQuick pick\u201D \u2014 it automatically starts the right combination for you.',
+        'Further down you\u2019ll find volume, timer, journey mode, background sound and a journal to track how it feels.',
+      ],
+      tourClose:'Close', tourNext:'Next', tourDone:'Done',
+      sharedComboLoaded:'Shared combination loaded.',
+    },
+  },
+  tr: {
+    names: { sahasrara:'Taç Çakra', ajna:'Üçüncü Göz Çakrası', vishuddha:'Boğaz Çakrası', anahata:'Kalp Çakrası', manipura:'Güneş Sinirağı Çakrası', svadhisthana:'Sakral Çakra', muladhara:'Kök Çakra', p174:'Ağrı Giderme', p285:'Doku Onarımı', healing:'Şifa Frekansı' },
+    subtitles: { p174:'Solfej', p285:'Solfej', healing:'Evrensel akort' },
+    descs: {
+      sahasrara:'Ruhsal farkındalık ve kendinden büyük bir şeyle bağlantı.',
+      ajna:'Sezgi ve sözcüklerin ötesinde net kavrayış.',
+      vishuddha:'İletişim ve kendini ifade etme cesareti.',
+      anahata:'Sevgi, şefkat ve başkalarıyla bağlantı.',
+      manipura:'Kişisel güç, özgüven ve irade.',
+      svadhisthana:'Yaratıcılık, duygu ve keyif.',
+      muladhara:'Güvenlik, topraklanma ve temel ihtiyaçların.',
+      p174:'Ağrı, gerginlik ve güven hissinde rahatlama.',
+      p285:'Örneğin efordan sonra doku ve enerji onarımı.',
+      healing:'İç huzur ve uyum için alternatif akort.',
+    },
+    quick: {
+      stress:{label:'Stresi azalt', note:'Güneş sinirağı ve 174 Hz sinir sistemini sakinleştirir, gerginliği hafifletir.'},
+      energy:{label:'Enerji & canlılık', note:'Kök ve güneş sinirağı çakraları güç ve itici enerjiyi harekete geçirir.'},
+      sleep:{label:'Daha iyi uyku', note:'Uykuya geçişi yumuşatan sakin, düşük bir akort olarak 432 Hz.'},
+      calm:{label:'İç huzur', note:'Kalp çakrası ve ağrı giderme beden ve zihni dinginleştirir.'},
+      grief:{label:'Kederi işleme', note:'Kalp çakrası ve doku onarımı duygusal iyileşmeyi destekler.'},
+      focus:{label:'Odaklanma & konsantrasyon', note:'Net ve odaklı düşünme için üçüncü göz çakrası.'},
+      ground:{label:'Topraklanma & korkuyu bırakma', note:'Kök ve sakral çakralar gerginliği ve belirsizliği bırakmaya yardımcı olur.'},
+      heart:{label:'Kalbi açmak', note:'Dürüst, açık bağlantı için kalp, boğaz ve üçüncü göz çakraları.'},
+      spiritual:{label:'Ruhsal bağlantı', note:'Meditasyon ve genişlemiş farkındalık için taç ve üçüncü göz çakraları.'},
+      all:{label:'Tüm çakralar', note:'Tam bir ses banyosu deneyimi için yedi çakra birden.'},
+    },
+    feelings: { rustig:'\u{1F60C} Sakin', blij:'\u{1F60A} Mutlu', energiek:'\u26A1 Enerjik', moe:'\u{1F634} Yorgun', verdrietig:'\u{1F622} Üzgün', gestrest:'\u{1F61F} Stresli' },
+    ambient: { rain:'Yağmur', ocean:'Okyanus', bowl:'Şifa çanağı' },
+    ui: {
+      eyebrow:'Sushumna \u00B7 7 merkez', title:'Çakra Frekansları',
+      sub:'İlgili tonu duymak için bir veya birden fazla çakra seçin. Katmanlı bir ses için merkezleri birleştirin veya tek tek dinleyin.',
+      startHint:'Sesi etkinleştirmek için dokunun',
+      dividerExtra:'Ekstra şifa frekansları', dividerQuick:'Hızlı seçim', dividerJourney:'Yolculuk & paylaşım',
+      dividerBreath:'Nefes', dividerAmbient:'Arka plan sesi', dividerJournal:'Günlük', dividerSettings:'Ayarlar',
+      quickNoteDefault:'Şu an neye ihtiyacın olduğunu seç \u2014 uygun çakralar otomatik başlar.',
+      journeyStart:'Yolculuğu başlat (14 dk, kök \u2192 taç)', journeyStop:'Yolculuğu durdur',
+      journeyMsg:(name,desc)=>`Yolculuk: ${name} \u2014 ${desc}`, journeyDone:'Yolculuk tamamlandı.',
+      shareLabel:'Bu kombinasyonu paylaş', shareCopied:'Bağlantı kopyalandı!', shareFailed:'Kopyalama başarısız',
+      breathToggleOff:'Nefes rehberi: kapalı', breathToggleOn:'Nefes rehberi: açık',
+      breathIn:'Nefes al \u2014 4s', breathHold:'Tut \u2014 7s', breathOut:'Nefes ver \u2014 8s',
+      volume:'Ses düzeyi', waveform:'Dalga formu', stopAll:'Tümünü durdur',
+      customFreqLabel:'Özel frekans', customFreqPlay:'Çal', customFreqStop:'Durdur',
+      binauralOff:'Binaural sesler: kapalı', binauralOn:'Binaural sesler: açık',
+      bandDelta:'Delta \u00B7 derin uyku', bandTheta:'Theta \u00B7 gevşeme', bandAlpha:'Alfa \u00B7 uyanık sakinlik', bandBeta:'Beta \u00B7 odaklanma',
+      sessionLength:'Seans süresi', timerStart:'Zamanlayıcıyı başlat', timerCancel:'Zamanlayıcıyı iptal et',
+      themeLight:'Açık tema', themeDark:'Koyu tema', printBtn:'Yazdır / PDF olarak kaydet',
+      journalNamePlaceholder:'İsim (opsiyonel)', journalNotePlaceholder:'Seanstan önce veya sonra nasıl hissediyorsun? (opsiyonel)',
+      journalSave:'Günlüğe kaydet', journalEmpty:'Henüz kayıt yok.',
+      footer:'396 \u00B7 417 \u00B7 528 \u00B7 639 \u00B7 741 \u00B7 852 \u00B7 963 Hz \u2014 geleneksel olarak yedi çakraya atfedilen solfej frekansları.<br>174 \u00B7 285 \u00B7 432 Hz, çakra sisteminden bağımsız, sıkça anılan ekstra \u2018şifa frekansları\u2019dır.<br>Bu sayfadaki anlamlar spiritüel ve alternatif geleneklerden gelir ve bilimsel olarak kanıtlanmamıştır.<br>Binaural sesler her kulağa hafifçe farklı bir ton çalar \u2014 mutlaka kulaklık kullanın. Uzun süre dinlerken ses düzeyini düşük tutun.',
+      tourSteps:[
+        'Bir çakrayı çalmak için çizgi boyunca yedi noktadan birine dokun. Katmanlı bir ses için birkaçını birleştir.',
+        'Seçim yapmak istemiyor musun? \u201CHızlı seçim\u201Di kullan \u2014 doğru kombinasyonu otomatik başlatır.',
+        'Daha aşağıda ses düzeyi, zamanlayıcı, yolculuk modu, arka plan sesi ve nasıl hissettiğini takip etmek için bir günlük bulacaksın.',
+      ],
+      tourClose:'Kapat', tourNext:'İleri', tourDone:'Bitti',
+      sharedComboLoaded:'Paylaşılan kombinasyon yüklendi.',
+    },
+  },
+};
+
+let currentLang = 'nl';
+function tr_(key){ return I18N[currentLang].ui[key]; }
 
 const ALL_ITEMS = [...CHAKRAS, ...EXTRAS];
 const itemsById = {};
@@ -805,6 +979,7 @@ const timerBtn = document.getElementById('timerBtn');
 const timerDisplay = document.getElementById('timerDisplay');
 const quickButtonsEl = document.getElementById('quickButtons');
 const quickNoteEl = document.getElementById('quickNote');
+const langButtonsEl = document.getElementById('langButtons');
 const journeyBtn = document.getElementById('journeyBtn');
 const ambientButtonsEl = document.getElementById('ambientButtons');
 const breathToggle = document.getElementById('breathToggle');
@@ -843,6 +1018,7 @@ function saveSettings(){
       binaural: binaural,
       beat: beatEl.value,
       light: document.body.classList.contains('light'),
+      lang: currentLang,
     }));
   }catch(e){ /* localStorage niet beschikbaar, negeren */ }
 }
@@ -857,12 +1033,13 @@ function loadSettings(){
     if(s.binaural){
       binaural = true;
       binauralToggle.classList.add('toggle-on');
-      binauralToggle.textContent = 'Binaurale beats: aan';
       beatPanel.classList.add('enabled');
     }
     if(s.light){
       document.body.classList.add('light');
-      themeToggle.textContent = 'Donker thema';
+    }
+    if(s.lang && I18N[s.lang]){
+      currentLang = s.lang;
     }
   }catch(e){ /* corrupte data, negeren */ }
 }
@@ -987,7 +1164,7 @@ function stopAll(fadeSeconds=0.4){
   });
   if(customFreqBtn.classList.contains('toggle-on')){
     customFreqBtn.classList.remove('toggle-on');
-    customFreqBtn.textContent = 'Afspelen';
+    customFreqBtn.textContent = tr_('customFreqPlay');
   }
   refreshSpine();
 }
@@ -1027,8 +1204,8 @@ const DEFAULT_TITLE = document.title;
 function updateTitle(ids){
   if(ids.length === 0){ document.title = DEFAULT_TITLE; return; }
   const item = findItem(ids[0]);
-  const label = item ? (item.sa || `${item.freq} Hz`) : `${ids.length} tonen`;
-  document.title = `\u266A ${label}${ids.length > 1 ? ` +${ids.length-1}` : ''} — Chakra Frequenties`;
+  const label = item ? (item.sa || `${item.freq} Hz`) : `${ids.length}`;
+  document.title = `\u266A ${label}${ids.length > 1 ? ` +${ids.length-1}` : ''} — ${tr_('title')}`;
 }
 
 /* --- spectrum visualizer --- */
@@ -1064,10 +1241,10 @@ function startVisualizer(){
   draw();
 }
 
-function buildRow(chakra, container){
+function buildRow(item, container){
   const row = document.createElement('div');
   row.className = 'row';
-  row.style.setProperty('--c', chakra.color);
+  row.style.setProperty('--c', item.color);
 
   const visual = document.createElement('div');
   visual.className = 'visual';
@@ -1079,35 +1256,48 @@ function buildRow(chakra, container){
 
   const btn = document.createElement('button');
   btn.className = 'node-btn';
-  btn.setAttribute('aria-label', `${chakra.sa} — ${chakra.freq} Hz afspelen`);
 
   const info = document.createElement('div');
   info.className = 'info';
-  info.innerHTML = `
-    <div class="name-sa">${chakra.sa}</div>
-    <div class="name-nl">${chakra.nl}</div>
-    <div class="freq">${chakra.freq} Hz</div>
-    <div class="desc">${chakra.desc || ''}</div>
-  `;
+  const nameSaEl = document.createElement('div'); nameSaEl.className = 'name-sa';
+  const nameNlEl = document.createElement('div'); nameNlEl.className = 'name-nl';
+  const freqEl = document.createElement('div'); freqEl.className = 'freq'; freqEl.textContent = `${item.freq} Hz`;
+  const descEl = document.createElement('div'); descEl.className = 'desc';
+  info.appendChild(nameSaEl);
+  info.appendChild(nameNlEl);
+  info.appendChild(freqEl);
+  info.appendChild(descEl);
 
   row.appendChild(info);
   row.appendChild(btn);
   row.appendChild(visual);
   container.appendChild(row);
-  elRefs[chakra.id] = { btn, row };
+  elRefs[item.id] = { btn, row, nameSaEl, nameNlEl, descEl };
+  updateRowText(item);
 
   btn.addEventListener('click', ()=>{
     vibrate();
     const isOn = btn.classList.contains('on');
     if(isOn){
-      setNodeUI(chakra.id, false);
-      stopTone(chakra.id);
+      setNodeUI(item.id, false);
+      stopTone(item.id);
     }else{
-      setNodeUI(chakra.id, true);
-      startTone(chakra);
+      setNodeUI(item.id, true);
+      startTone(item);
     }
     refreshSpine();
   });
+}
+
+function updateRowText(item){
+  const ref = elRefs[item.id];
+  if(!ref) return;
+  const t = I18N[currentLang];
+  const displayName = item.sa || t.names[item.id];
+  ref.nameSaEl.textContent = displayName;
+  ref.nameNlEl.textContent = item.sa ? t.names[item.id] : (t.subtitles[item.id] || '');
+  ref.descEl.textContent = t.descs[item.id] || '';
+  ref.btn.setAttribute('aria-label', `${displayName} — ${item.freq} Hz`);
 }
 
 CHAKRAS.forEach(chakra => buildRow(chakra, rowsEl));
@@ -1132,35 +1322,36 @@ customFreqBtn.addEventListener('click', ()=>{
   const isOn = customFreqBtn.classList.contains('toggle-on');
   if(isOn){
     customFreqBtn.classList.remove('toggle-on');
-    customFreqBtn.textContent = 'Afspelen';
+    customFreqBtn.textContent = tr_('customFreqPlay');
     stopTone('custom');
   }else{
     const freq = Math.min(2000, Math.max(20, parseFloat(customFreqInput.value) || 111));
     customFreqInput.value = freq;
-    itemsById['custom'] = { id:'custom', sa:'Eigen frequentie', nl:'', freq, color:'#8ee0c8' };
+    itemsById['custom'] = { id:'custom', sa:'', freq, color:'#8ee0c8', customLabel:true };
     customFreqBtn.classList.add('toggle-on');
-    customFreqBtn.textContent = 'Stoppen';
+    customFreqBtn.textContent = tr_('customFreqStop');
     startTone(itemsById['custom']);
   }
   refreshSpine();
 });
 
 /* --- Binaurale beats --- */
-function bandLabel(hz){
-  if(hz < 4) return 'Delta &middot; diepe slaap';
-  if(hz < 8) return 'Theta &middot; ontspanning';
-  if(hz < 13) return 'Alpha &middot; alerte rust';
-  return 'Beta &middot; focus';
+function bandKey(hz){
+  if(hz < 4) return 'bandDelta';
+  if(hz < 8) return 'bandTheta';
+  if(hz < 13) return 'bandAlpha';
+  return 'bandBeta';
 }
 function updateBeatLabel(){
-  beatLabel.innerHTML = `${beatEl.value} Hz &middot; ${bandLabel(parseFloat(beatEl.value)).split(' &middot; ')[1]}`;
+  const bandText = tr_(bandKey(parseFloat(beatEl.value))).split(' \u00B7 ')[1];
+  beatLabel.textContent = `${beatEl.value} Hz \u00B7 ${bandText}`;
 }
 updateBeatLabel();
 
 binauralToggle.addEventListener('click', ()=>{
   binaural = !binaural;
   binauralToggle.classList.toggle('toggle-on', binaural);
-  binauralToggle.textContent = `Binaurale beats: ${binaural ? 'aan' : 'uit'}`;
+  binauralToggle.textContent = tr_(binaural ? 'binauralOn' : 'binauralOff');
   beatPanel.classList.toggle('enabled', binaural);
   restartActiveTones();
   saveSettings();
@@ -1190,7 +1381,7 @@ function clearSession(){
   if(sessionInterval) clearInterval(sessionInterval);
   sessionTimeout = null; sessionInterval = null; sessionEndTime = null;
   timerDisplay.textContent = '';
-  timerBtn.textContent = 'Start timer';
+  timerBtn.textContent = tr_('timerStart');
   timerBtn.classList.remove('toggle-on');
 }
 
@@ -1204,7 +1395,7 @@ function startSession(minutes){
     stopAll(8); // lange, zachte fade-out aan het einde van de sessie
     clearSession();
   }, ms);
-  timerBtn.textContent = 'Annuleer timer';
+  timerBtn.textContent = tr_('timerCancel');
   timerBtn.classList.add('toggle-on');
 }
 
@@ -1218,35 +1409,27 @@ timerBtn.addEventListener('click', ()=>{
 
 /* --- Kies snel: op gevoel of preset, samengevoegd --- */
 const QUICKPICKS = [
-  { label:'Stress verminderen',    ids:['manipura','p174'],
-    note:'Zonnevlechtchakra en 174 Hz kalmeren het zenuwstelsel en verlichten spanning.' },
-  { label:'Energie & vitaliteit',  ids:['muladhara','manipura'],
-    note:'Wortel- en zonnevlechtchakra activeren kracht en aandrijving.' },
-  { label:'Beter slapen',          ids:['healing'],
-    note:'432 Hz als rustige, lage stemming om af te bouwen richting slaap.' },
-  { label:'Innerlijke rust',       ids:['anahata','p174'],
-    note:'Hartchakra en pijnverlichting brengen lichaam en geest tot rust.' },
-  { label:'Verdriet verwerken',    ids:['anahata','p285'],
-    note:'Hartchakra en weefselherstel ondersteunen emotionele heling.' },
-  { label:'Focus & concentratie',  ids:['ajna'],
-    note:'Derde-oogchakra voor helder, gericht denken.' },
-  { label:'Aarden & angst loslaten', ids:['muladhara','svadhisthana'],
-    note:'Wortel- en sacraalchakra helpen spanning en onzekerheid los te laten.' },
-  { label:'Hart openen',           ids:['anahata','vishuddha','ajna'],
-    note:'Hart-, keel- en derde-oogchakra voor eerlijke, open verbinding.' },
-  { label:'Spirituele verbinding', ids:['sahasrara','ajna'],
-    note:'Kruin- en derde-oogchakra voor meditatie en verruimd bewustzijn.' },
-  { label:'Alle chakra\u2019s',    ids: CHAKRAS.map(c=>c.id),
-    note:'Alle zeven chakra\u2019s tegelijk, voor een volledige klankbadervaring.' },
+  { key:'stress',    ids:['manipura','p174'] },
+  { key:'energy',    ids:['muladhara','manipura'] },
+  { key:'sleep',     ids:['healing'] },
+  { key:'calm',      ids:['anahata','p174'] },
+  { key:'grief',     ids:['anahata','p285'] },
+  { key:'focus',     ids:['ajna'] },
+  { key:'ground',    ids:['muladhara','svadhisthana'] },
+  { key:'heart',     ids:['anahata','vishuddha','ajna'] },
+  { key:'spiritual', ids:['sahasrara','ajna'] },
+  { key:'all',       ids: CHAKRAS.map(c=>c.id) },
 ];
+const quickBtnRefs = {};
 
 QUICKPICKS.forEach(pick=>{
   const btn = document.createElement('button');
   btn.className = 'pill';
-  btn.textContent = pick.label;
+  btn.textContent = I18N[currentLang].quick[pick.key].label;
+  quickBtnRefs[pick.key] = btn;
   btn.addEventListener('click', ()=>{
     vibrate();
-    quickNoteEl.textContent = pick.note;
+    quickNoteEl.textContent = I18N[currentLang].quick[pick.key].note;
     switchTo(pick.ids);
   });
   quickButtonsEl.appendChild(btn);
@@ -1280,7 +1463,7 @@ function stopJourney(){
   journeyTimeouts.forEach(t=>clearTimeout(t));
   journeyTimeouts = [];
   journeyActive = false;
-  journeyBtn.textContent = 'Start journey (14 min, wortel \u2192 kruin)';
+  journeyBtn.textContent = tr_('journeyStart');
   journeyBtn.classList.remove('toggle-on');
 }
 
@@ -1288,7 +1471,7 @@ function startJourney(){
   switchTo([]);
   stopJourney();
   journeyActive = true;
-  journeyBtn.textContent = 'Stop journey';
+  journeyBtn.textContent = tr_('journeyStop');
   journeyBtn.classList.add('toggle-on');
   const perChakra = 120; // seconden per chakra
   const crossfade = 4;
@@ -1298,7 +1481,7 @@ function startJourney(){
       const prevId = i > 0 ? ROOT_TO_CROWN[i-1].id : null;
       setNodeUI(chakra.id, true);
       startTone(chakra);
-      quickNoteEl.textContent = `Journey: ${chakra.sa} — ${chakra.desc}`;
+      quickNoteEl.textContent = tr_('journeyMsg')(chakra.sa, I18N[currentLang].descs[chakra.id]);
       if(prevId){
         setTimeout(()=>{
           setNodeUI(prevId, false);
@@ -1312,7 +1495,7 @@ function startJourney(){
   const endT = setTimeout(()=>{
     stopAll(8);
     stopJourney();
-    quickNoteEl.textContent = 'Journey afgerond.';
+    quickNoteEl.textContent = tr_('journeyDone');
   }, ROOT_TO_CROWN.length * perChakra * 1000);
   journeyTimeouts.push(endT);
 }
@@ -1330,9 +1513,9 @@ journeyBtn.addEventListener('click', ()=>{
 /* --- Achtergrondgeluid (gesynthetiseerd, geen externe bestanden nodig) --- */
 const AMBIENT_LEVELS = { rain: 0.16, ocean: 0.20, bowl: 0.14 };
 const AMBIENTS = [
-  { id:'rain',  label:'Regen' },
-  { id:'ocean', label:'Oceaan' },
-  { id:'bowl',  label:'Klankschaal' },
+  { id:'rain' },
+  { id:'ocean' },
+  { id:'bowl' },
 ];
 const ambientNodes = {};
 const ambientBtnRefs = {};
@@ -1412,7 +1595,7 @@ function stopAmbient(id, fade=1.5){
 AMBIENTS.forEach(a=>{
   const btn = document.createElement('button');
   btn.className = 'pill';
-  btn.textContent = a.label;
+  btn.textContent = I18N[currentLang].ambient[a.id];
   ambientBtnRefs[a.id] = btn;
   btn.addEventListener('click', ()=>{
     vibrate();
@@ -1433,14 +1616,14 @@ let breathTimers = [];
 function clearBreathTimers(){ breathTimers.forEach(t=>clearTimeout(t)); breathTimers = []; }
 function runBreathCycle(){
   if(!breathing) return;
-  breathPhase.textContent = 'Adem in \u2014 4s';
+  breathPhase.textContent = tr_('breathIn');
   breathTimers.push(setTimeout(()=>{
     if(!breathing) return;
-    breathPhase.textContent = 'Vasthouden \u2014 7s';
+    breathPhase.textContent = tr_('breathHold');
   }, 4000));
   breathTimers.push(setTimeout(()=>{
     if(!breathing) return;
-    breathPhase.textContent = 'Adem uit \u2014 8s';
+    breathPhase.textContent = tr_('breathOut');
   }, 11000));
   breathTimers.push(setTimeout(()=>{
     if(breathing) runBreathCycle();
@@ -1450,7 +1633,7 @@ breathToggle.addEventListener('click', ()=>{
   vibrate();
   breathing = !breathing;
   breathToggle.classList.toggle('toggle-on', breathing);
-  breathToggle.textContent = `Ademhalingsgeleider: ${breathing ? 'aan' : 'uit'}`;
+  breathToggle.textContent = tr_(breathing ? 'breathToggleOn' : 'breathToggleOff');
   breathCircle.classList.toggle('running', breathing);
   if(breathing){ runBreathCycle(); } else { clearBreathTimers(); breathPhase.textContent = ''; }
 });
@@ -1459,7 +1642,7 @@ breathToggle.addEventListener('click', ()=>{
 themeToggle.addEventListener('click', ()=>{
   vibrate();
   const isLight = document.body.classList.toggle('light');
-  themeToggle.textContent = isLight ? 'Donker thema' : 'Licht thema';
+  themeToggle.textContent = tr_(isLight ? 'themeDark' : 'themeLight');
   saveSettings();
 });
 
@@ -1478,17 +1661,19 @@ function saveJournalEntries(list){
   try{ localStorage.setItem(JOURNAL_KEY, JSON.stringify(list.slice(-20))); }
   catch(e){ /* negeren */ }
 }
+const LOCALE_MAP = { nl:'nl-NL', en:'en-US', tr:'tr-TR' };
 function renderJournal(){
   const list = loadJournal().slice().reverse();
   if(list.length === 0){
-    journalListEl.innerHTML = '<div class="journal-empty">Nog geen aantekeningen.</div>';
+    journalListEl.innerHTML = `<div class="journal-empty">${tr_('journalEmpty')}</div>`;
     return;
   }
   journalListEl.innerHTML = list.map(e=>{
-    const date = new Date(e.date).toLocaleDateString('nl-NL', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
+    const date = new Date(e.date).toLocaleDateString(LOCALE_MAP[currentLang], { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
     const who = e.name ? `<strong>${escapeHtml(e.name)}</strong> \u2014 ` : '';
     const note = e.note ? ` \u2014 ${escapeHtml(e.note)}` : '';
-    return `<div class="journal-entry"><span class="journal-date">${date}</span>${who}${escapeHtml(e.feeling)}${note}</div>`;
+    const feelingText = I18N[currentLang].feelings[e.feeling] || escapeHtml(e.feeling || '');
+    return `<div class="journal-entry"><span class="journal-date">${date}</span>${who}${feelingText}${note}</div>`;
   }).join('');
 }
 journalSave.addEventListener('click', ()=>{
@@ -1514,9 +1699,9 @@ shareBtn.addEventListener('click', async ()=>{
   const original = shareBtn.textContent;
   try{
     await navigator.clipboard.writeText(url);
-    shareBtn.textContent = 'Link gekopieerd!';
+    shareBtn.textContent = tr_('shareCopied');
   }catch(e){
-    shareBtn.textContent = 'Kopi\u00ebren mislukt';
+    shareBtn.textContent = tr_('shareFailed');
   }
   setTimeout(()=>{ shareBtn.textContent = original; }, 2200);
 });
@@ -1538,7 +1723,7 @@ function applySharedComboIfNeeded(){
   if(sharedCombo.binaural){
     binaural = true;
     binauralToggle.classList.add('toggle-on');
-    binauralToggle.textContent = 'Binaurale beats: aan';
+    binauralToggle.textContent = tr_('binauralOn');
     beatPanel.classList.add('enabled');
   }
   if(sharedCombo.beat){
@@ -1550,7 +1735,7 @@ function applySharedComboIfNeeded(){
     if(item){ setNodeUI(id, true); startTone(item); }
   });
   refreshSpine();
-  quickNoteEl.textContent = 'Gedeelde combinatie geladen.';
+  quickNoteEl.textContent = tr_('sharedComboLoaded');
 }
 
 /* --- Print / cheatsheet als PDF --- */
@@ -1561,37 +1746,125 @@ printBtn.addEventListener('click', ()=>{
 
 /* --- Eerste-bezoek tour --- */
 const TOUR_KEY = 'chakra-freq-tour-done';
-const TOUR_STEPS = [
-  'Tik op een van de zeven punten langs de lijn om een chakra af te spelen. Combineer er meerdere voor een samengestelde klank.',
-  'Geen zin om te kiezen? Gebruik \u201cKies snel\u201d \u2014 die starten automatisch de juiste combinatie op gevoel of thema.',
-  'Onderin vind je volume, timer, journey-modus, achtergrondgeluid en een dagboek om bij te houden hoe het voelt.',
-];
 let tourIndex = 0;
 function showTourStep(){
-  tourText.textContent = TOUR_STEPS[tourIndex];
-  tourStep.textContent = `${tourIndex+1}/${TOUR_STEPS.length}`;
-  tourNext.textContent = tourIndex === TOUR_STEPS.length - 1 ? 'Klaar' : 'Volgende';
+  const steps = tr_('tourSteps');
+  tourText.textContent = steps[tourIndex];
+  tourStep.textContent = `${tourIndex+1}/${steps.length}`;
+  tourNext.textContent = tourIndex === steps.length - 1 ? tr_('tourDone') : tr_('tourNext');
+  tourSkip.textContent = tr_('tourClose');
 }
 function endTour(){
   tourBanner.classList.add('hidden');
   try{ localStorage.setItem(TOUR_KEY, '1'); }catch(e){}
 }
 tourNext.addEventListener('click', ()=>{
-  if(tourIndex >= TOUR_STEPS.length - 1){ endTour(); return; }
+  if(tourIndex >= tr_('tourSteps').length - 1){ endTour(); return; }
   tourIndex++;
   showTourStep();
 });
 tourSkip.addEventListener('click', endTour);
+let tourShouldShow = false;
 try{
   if(!localStorage.getItem(TOUR_KEY)){
-    tourBanner.classList.remove('hidden');
-    showTourStep();
+    tourShouldShow = true;
   }
 }catch(e){ /* localStorage niet beschikbaar, tour overslaan */ }
 
 /* --- offline/PWA (alleen actief als de site gehost wordt, niet via file://) --- */
 if('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')){
   navigator.serviceWorker.register('sw.js').catch(()=>{ /* geen sw.js aanwezig, negeren */ });
+}
+
+/* --- Taal --- */
+const LANGS = [
+  { code:'nl', label:'NL' },
+  { code:'en', label:'EN' },
+  { code:'tr', label:'TR' },
+];
+const langBtnRefs = {};
+
+function applyLanguage(lang){
+  currentLang = lang;
+  const t = I18N[lang].ui;
+
+  document.getElementById('txtEyebrow').textContent = t.eyebrow;
+  document.getElementById('txtTitle').textContent = t.title;
+  document.getElementById('txtSub').textContent = t.sub;
+  document.getElementById('startHintText').textContent = t.startHint;
+
+  document.getElementById('txtDividerExtra').textContent = t.dividerExtra;
+  document.getElementById('txtDividerQuick').textContent = t.dividerQuick;
+  document.getElementById('txtDividerJourney').textContent = t.dividerJourney;
+  document.getElementById('txtDividerBreath').textContent = t.dividerBreath;
+  document.getElementById('txtDividerAmbient').textContent = t.dividerAmbient;
+  document.getElementById('txtDividerJournal').textContent = t.dividerJournal;
+  document.getElementById('txtDividerSettings').textContent = t.dividerSettings;
+
+  quickNoteEl.textContent = t.quickNoteDefault;
+  journeyBtn.textContent = journeyActive ? t.journeyStop : t.journeyStart;
+  shareBtn.textContent = t.shareLabel;
+  breathToggle.textContent = breathing ? t.breathToggleOn : t.breathToggleOff;
+
+  document.getElementById('txtVolume').textContent = t.volume;
+  document.getElementById('txtWaveform').textContent = t.waveform;
+  stopAllBtn.textContent = t.stopAll;
+  document.getElementById('txtCustomFreq').textContent = t.customFreqLabel;
+  customFreqBtn.textContent = customFreqBtn.classList.contains('toggle-on') ? t.customFreqStop : t.customFreqPlay;
+  binauralToggle.textContent = binaural ? t.binauralOn : t.binauralOff;
+  updateBeatLabel();
+  document.getElementById('txtSessionLength').textContent = t.sessionLength;
+  timerBtn.textContent = sessionEndTime ? t.timerCancel : t.timerStart;
+  themeToggle.textContent = document.body.classList.contains('light') ? t.themeDark : t.themeLight;
+  printBtn.textContent = t.printBtn;
+
+  journalName.placeholder = t.journalNamePlaceholder;
+  journalNote.placeholder = t.journalNotePlaceholder;
+  journalSave.textContent = t.journalSave;
+  Array.from(journalFeeling.options).forEach(opt=>{
+    opt.textContent = I18N[lang].feelings[opt.value] || opt.value;
+  });
+  renderJournal();
+
+  document.getElementById('txtFooter').innerHTML = t.footer;
+
+  QUICKPICKS.forEach(pick=>{
+    quickBtnRefs[pick.key].textContent = I18N[lang].quick[pick.key].label;
+  });
+  AMBIENTS.forEach(a=>{
+    ambientBtnRefs[a.id].textContent = I18N[lang].ambient[a.id];
+  });
+
+  ALL_ITEMS.forEach(updateRowText);
+
+  if(!tourBanner.classList.contains('hidden')){
+    showTourStep();
+  }
+
+  Object.entries(langBtnRefs).forEach(([code, btn])=>{
+    btn.classList.toggle('toggle-on', code === lang);
+  });
+
+  saveSettings();
+}
+
+LANGS.forEach(l=>{
+  const btn = document.createElement('button');
+  btn.className = 'pill';
+  btn.textContent = l.label;
+  langBtnRefs[l.code] = btn;
+  btn.addEventListener('click', ()=>{
+    vibrate();
+    applyLanguage(l.code);
+  });
+  langButtonsEl.appendChild(btn);
+});
+
+applyLanguage(currentLang);
+
+if(tourShouldShow){
+  tourBanner.classList.remove('hidden');
+  showTourStep();
 }
 </script>
 </body>
