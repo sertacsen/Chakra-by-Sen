@@ -2315,6 +2315,7 @@ if('serviceWorker' in navigator && (location.protocol === 'https:' || location.h
   navigator.serviceWorker.register('sw.js').catch(()=>{ /* geen sw.js aanwezig, negeren */ });
 }
 /* --- Taal --- */
+/* --- Taal --- */
 const LANGS = [
   { code:'nl', label:'NL' },
   { code:'en', label:'EN' },
@@ -2408,6 +2409,10 @@ LANGS.forEach(l=>{
     vibrate();
     applyLanguage(l.code);
   });
+  langButtonsEl.appendChild(btn);
+});
+
+applyLanguage(currentLang);
   langButtonsEl.appendChild(btn);
 });
 
