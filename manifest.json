@@ -2,7 +2,7 @@
   "name": "Chakra Frequenties",
   "short_name": "Chakra",
   "description": "Speel chakra- en healing-frequenties af, op gevoel of via presets.",
-  "start_url": "./chakra-frequenties.html",
+  "start_url": "."
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
